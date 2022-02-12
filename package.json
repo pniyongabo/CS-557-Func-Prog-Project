@@ -1,0 +1,28 @@
+{
+  "name": "fifa-squad-builder",
+  "version": "1.0.0",
+  "description": "A simple soccer squad-builder that uses players attributes to maximize total team chemistry. This web-app was built using functional programming style.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pniyongabo/CS-557-Func-Prog-Project.git"
+  },
+  "keywords": [
+    "fifa",
+    "soccer",
+    "es6",
+    "functional",
+    "programming",
+    "course",
+    "project"
+  ],
+  "author": "Patrick Niyongabo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pniyongabo/CS-557-Func-Prog-Project/issues"
+  },
+  "homepage": "https://github.com/pniyongabo/CS-557-Func-Prog-Project#readme"
+}
