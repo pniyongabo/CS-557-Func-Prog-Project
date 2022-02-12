@@ -1,0 +1,198 @@
+[
+  {
+    "id": 1,
+    "name": "3F Superliga (DEN 1)"
+  },
+  {
+    "id": 4,
+    "name": "1A Pro League (BEL 1)"
+  },
+  {
+    "id": 10,
+    "name": "Eredivisie"
+  },
+  {
+    "id": 13,
+    "name": "Premier League"
+  },
+  {
+    "id": 14,
+    "name": "EFL Championship (ENG 2)"
+  },
+  {
+    "id": 16,
+    "name": "Ligue 1"
+  },
+  {
+    "id": 17,
+    "name": "Ligue 2 (FRA 2)"
+  },
+  {
+    "id": 19,
+    "name": "Bundesliga"
+  },
+  {
+    "id": 20,
+    "name": "Bundesliga 2 (GER 2)"
+  },
+  {
+    "id": 31,
+    "name": "Serie A TIM"
+  },
+  {
+    "id": 39,
+    "name": "Major League Soccer"
+  },
+  {
+    "id": 41,
+    "name": "Eliteserien (NOR 1)"
+  },
+  {
+    "id": 50,
+    "name": "Scottish Premiership (SPFL)"
+  },
+  {
+    "id": 53,
+    "name": "LaLiga Santander"
+  },
+  {
+    "id": 54,
+    "name": "LaLiga SmartBank (ESP 2)"
+  },
+  {
+    "id": 56,
+    "name": "Allsvenskan (SWE 1)"
+  },
+  {
+    "id": 60,
+    "name": "EFL League One (ENG 3)"
+  },
+  {
+    "id": 61,
+    "name": "EFL League Two (ENG 4)"
+  },
+  {
+    "id": 63,
+    "name": "Hellas Liga (GRE 1)"
+  },
+  {
+    "id": 65,
+    "name": "SSE Airtricity League (IRL 1)"
+  },
+  {
+    "id": 66,
+    "name": "Polski Ekstraklasa (POL 1)"
+  },
+  {
+    "id": 68,
+    "name": "Süper Lig (TUR 1)"
+  },
+  {
+    "id": 80,
+    "name": "Ö Bundesliga (AUT 1)"
+  },
+  {
+    "id": 83,
+    "name": "K League 1 (KOR 1)"
+  },
+  {
+    "id": 189,
+    "name": "Raiffeisen Super L. (SUI 1)"
+  },
+  {
+    "id": 308,
+    "name": "Liga NOS (POR 1)"
+  },
+  {
+    "id": 317,
+    "name": "Liga Hrvatska (CRO 1)"
+  },
+  {
+    "id": 319,
+    "name": "Česká Liga (CZE 1)"
+  },
+  {
+    "id": 322,
+    "name": "Finnliiga (FIN 1)"
+  },
+  {
+    "id": 330,
+    "name": "Liga I (ROM 1)"
+  },
+  {
+    "id": 332,
+    "name": "Ukrayina Liha (UKR 1)"
+  },
+  {
+    "id": 341,
+    "name": "LIGA BBVA MX (MEX 1)"
+  },
+  {
+    "id": 347,
+    "name": "South African FL (RSA 1)"
+  },
+  {
+    "id": 349,
+    "name": "Meiji Yasuda J1 (JPN 1)"
+  },
+  {
+    "id": 350,
+    "name": "MBS Pro League (SAU 1)"
+  },
+  {
+    "id": 351,
+    "name": "A-League (AUS 1)"
+  },
+  {
+    "id": 353,
+    "name": "Primera División (ARG 1)"
+  },
+  {
+    "id": 1003,
+    "name": "CONMEBOL Libertadores"
+  },
+  {
+    "id": 1014,
+    "name": "CONMEBOL Sudamericana"
+  },
+  {
+    "id": 2012,
+    "name": "Chinese FA Super L. (CHN 1)"
+  },
+  {
+    "id": 2076,
+    "name": "3. Liga (GER 3)"
+  },
+  {
+    "id": 2118,
+    "name": "Icons"
+  },
+  {
+    "id": 2149,
+    "name": "Indian Super League (IND 1)"
+  },
+  {
+    "id": 2172,
+    "name": "United Emirates L. (UAE 1)"
+  },
+  {
+    "id": 2179,
+    "name": "Calcio B (ITA 2)"
+  },
+  {
+    "id": 2208,
+    "name": "National League (ENG 5)"
+  },
+  {
+    "id": 2210,
+    "name": "Protathlima Cyta (CYP 1)"
+  },
+  {
+    "id": 2211,
+    "name": "Nemzetti Bajnoksag (HUN 1)"
+  },
+  {
+    "id": 3006,
+    "name": "League of Russia (RUS 1)"
+  }
+]

@@ -1,0 +1,502 @@
+[
+  {
+    "id": 1,
+    "name": "Arsenal",
+    "league": 13
+  },
+  {
+    "id": 2,
+    "name": "Aston Villa",
+    "league": 13
+  },
+  {
+    "id": 3,
+    "name": "Blackburn Rovers",
+    "league": 14
+  },
+  {
+    "id": 4,
+    "name": "Bolton",
+    "league": 60
+  },
+  {
+    "id": 5,
+    "name": "Chelsea",
+    "league": 13
+  },
+  {
+    "id": 7,
+    "name": "Everton",
+    "league": 13
+  },
+  {
+    "id": 8,
+    "name": "Leeds United",
+    "league": 13
+  },
+  {
+    "id": 9,
+    "name": "Liverpool",
+    "league": 13
+  },
+  {
+    "id": 10,
+    "name": "Manchester City",
+    "league": 13
+  },
+  {
+    "id": 11,
+    "name": "Manchester Utd",
+    "league": 13
+  },
+  {
+    "id": 12,
+    "name": "Middlesbrough",
+    "league": 14
+  },
+  {
+    "id": 13,
+    "name": "Newcastle Utd",
+    "league": 13
+  },
+  {
+    "id": 14,
+    "name": "Nott'm Forest",
+    "league": 14
+  },
+  {
+    "id": 15,
+    "name": "QPR",
+    "league": 14
+  },
+  {
+    "id": 17,
+    "name": "Southampton",
+    "league": 13
+  },
+  {
+    "id": 18,
+    "name": "Spurs",
+    "league": 13
+  },
+  {
+    "id": 19,
+    "name": "West Ham",
+    "league": 13
+  },
+  {
+    "id": 21,
+    "name": "FC Bayern",
+    "league": 19
+  },
+  {
+    "id": 22,
+    "name": "Dortmund",
+    "league": 19
+  },
+  {
+    "id": 23,
+    "name": "M'gladbach",
+    "league": 19
+  },
+  {
+    "id": 25,
+    "name": "SC Freiburg",
+    "league": 19
+  },
+  {
+    "id": 27,
+    "name": "Hansa Rostock",
+    "league": 20
+  },
+  {
+    "id": 28,
+    "name": "Hamburger SV",
+    "league": 20
+  },
+  {
+    "id": 29,
+    "name": "Kaiserslautern",
+    "league": 2076
+  },
+  {
+    "id": 31,
+    "name": "1. FC Köln",
+    "league": 19
+  },
+  {
+    "id": 32,
+    "name": "Leverkusen",
+    "league": 19
+  },
+  {
+    "id": 33,
+    "name": "1860 München",
+    "league": 2076
+  },
+  {
+    "id": 34,
+    "name": "FC Schalke 04",
+    "league": 20
+  },
+  {
+    "id": 36,
+    "name": "VfB Stuttgart",
+    "league": 19
+  },
+  {
+    "id": 38,
+    "name": "Werder Bremen",
+    "league": 20
+  },
+  {
+    "id": 44,
+    "name": "Inter",
+    "league": 31
+  },
+  {
+    "id": 47,
+    "name": "Milan",
+    "league": 31
+  },
+  {
+    "id": 48,
+    "name": "Napoli",
+    "league": 31
+  },
+  {
+    "id": 50,
+    "name": "Parma",
+    "league": 2179
+  },
+  {
+    "id": 54,
+    "name": "Torino",
+    "league": 31
+  },
+  {
+    "id": 55,
+    "name": "Udinese",
+    "league": 31
+  },
+  {
+    "id": 57,
+    "name": "AJ Auxerre",
+    "league": 17
+  },
+  {
+    "id": 58,
+    "name": "SC Bastia",
+    "league": 17
+  },
+  {
+    "id": 59,
+    "name": "Bordeaux",
+    "league": 16
+  },
+  {
+    "id": 62,
+    "name": "EA Guingamp",
+    "league": 17
+  },
+  {
+    "id": 64,
+    "name": "RC Lens",
+    "league": 16
+  },
+  {
+    "id": 65,
+    "name": "LOSC",
+    "league": 16
+  },
+  {
+    "id": 66,
+    "name": "OL",
+    "league": 16
+  },
+  {
+    "id": 68,
+    "name": "FC Metz",
+    "league": 16
+  },
+  {
+    "id": 69,
+    "name": "AS Monaco",
+    "league": 16
+  },
+  {
+    "id": 70,
+    "name": "Montpellier",
+    "league": 16
+  },
+  {
+    "id": 71,
+    "name": "FC Nantes",
+    "league": 16
+  },
+  {
+    "id": 72,
+    "name": "OGC Nice",
+    "league": 16
+  },
+  {
+    "id": 73,
+    "name": "Paris SG",
+    "league": 16
+  },
+  {
+    "id": 74,
+    "name": "Rennes",
+    "league": 16
+  },
+  {
+    "id": 76,
+    "name": "Strasbourg",
+    "league": 16
+  },
+  {
+    "id": 77,
+    "name": "Aberdeen",
+    "league": 50
+  },
+  {
+    "id": 78,
+    "name": "Celtic",
+    "league": 50
+  },
+  {
+    "id": 80,
+    "name": "Heart of Midlothian",
+    "league": 50
+  },
+  {
+    "id": 81,
+    "name": "Hibernian",
+    "league": 50
+  },
+  {
+    "id": 83,
+    "name": "Motherwell",
+    "league": 50
+  },
+  {
+    "id": 86,
+    "name": "Rangers",
+    "league": 50
+  },
+  {
+    "id": 88,
+    "name": "Birmingham City",
+    "league": 14
+  },
+  {
+    "id": 89,
+    "name": "Charlton Ath",
+    "league": 60
+  },
+  {
+    "id": 91,
+    "name": "Derby County",
+    "league": 14
+  },
+  {
+    "id": 94,
+    "name": "Ipswich",
+    "league": 60
+  },
+  {
+    "id": 95,
+    "name": "Leicester City",
+    "league": 13
+  },
+  {
+    "id": 97,
+    "name": "Millwall",
+    "league": 14
+  },
+  {
+    "id": 106,
+    "name": "Sunderland",
+    "league": 60
+  },
+  {
+    "id": 109,
+    "name": "West Brom",
+    "league": 14
+  },
+  {
+    "id": 110,
+    "name": "Wolves",
+    "league": 13
+  },
+  {
+    "id": 121,
+    "name": "Crewe Alexandra",
+    "league": 60
+  },
+  {
+    "id": 127,
+    "name": "Shrewsbury",
+    "league": 60
+  },
+  {
+    "id": 142,
+    "name": "Doncaster",
+    "league": 60
+  },
+  {
+    "id": 143,
+    "name": "Exeter City",
+    "league": 61
+  },
+  {
+    "id": 144,
+    "name": "Fulham",
+    "league": 14
+  },
+  {
+    "id": 149,
+    "name": "Lincoln City",
+    "league": 60
+  },
+  {
+    "id": 159,
+    "name": "Bielefeld",
+    "league": 19
+  },
+  {
+    "id": 160,
+    "name": "VfL Bochum",
+    "league": 19
+  },
+  {
+    "id": 165,
+    "name": "Greuther Fürth",
+    "league": 19
+  },
+  {
+    "id": 166,
+    "name": "Hertha Berlin",
+    "league": 19
+  },
+  {
+    "id": 169,
+    "name": "1. FSV Mainz 05",
+    "league": 19
+  },
+  {
+    "id": 171,
+    "name": "1. FC Nürnberg",
+    "league": 20
+  },
+  {
+    "id": 175,
+    "name": "VfL Wolfsburg",
+    "league": 19
+  },
+  {
+    "id": 180,
+    "name": "Dundee FC",
+    "league": 50
+  },
+  {
+    "id": 181,
+    "name": "Dundee United",
+    "league": 50
+  },
+  {
+    "id": 189,
+    "name": "Bologna",
+    "league": 31
+  },
+  {
+    "id": 191,
+    "name": "RB Salzburg",
+    "league": 80
+  },
+  {
+    "id": 205,
+    "name": "Venezia",
+    "league": 31
+  },
+  {
+    "id": 206,
+    "name": "Hellas Verona",
+    "league": 31
+  },
+  {
+    "id": 209,
+    "name": "SK Sturm Graz",
+    "league": 80
+  },
+  {
+    "id": 210,
+    "name": "SM Caen",
+    "league": 17
+  },
+  {
+    "id": 211,
+    "name": "Dinamo Zagreb",
+    "league": 317
+  },
+  {
+    "id": 217,
+    "name": "FC Lorient",
+    "league": 16
+  },
+  {
+    "id": 219,
+    "name": "OM",
+    "league": 16
+  },
+  {
+    "id": 224,
+    "name": "Nîmes Olympique",
+    "league": 17
+  },
+  {
+    "id": 226,
+    "name": "FCSM",
+    "league": 17
+  },
+  {
+    "id": 229,
+    "name": "RSC Anderlecht",
+    "league": 4
+  },
+  {
+    "id": 230,
+    "name": "Royal Antwerp FC",
+    "league": 4
+  },
+  {
+    "id": 231,
+    "name": "Club Brugge",
+    "league": 4
+  },
+  {
+    "id": 232,
+    "name": "Standard Liège",
+    "league": 4
+  },
+  {
+    "id": 234,
+    "name": "SL Benfica",
+    "league": 308
+  },
+  {
+    "id": 236,
+    "name": "FC Porto",
+    "league": 308
+  },
+  {
+    "id": 237,
+    "name": "Sporting CP",
+    "league": 308
+  },
+  {
+    "id": 240,
+    "name": "Atlético de Madrid",
+    "league": 53
+  }
+]
