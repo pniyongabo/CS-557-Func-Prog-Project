@@ -4,7 +4,9 @@ const player = require("./player");
 // const hostname = "127.0.0.1";
 const port = 3000;
 const express = require('express');
+
 const app = express();
+app.set('view engine', 'pug');
 
 // const server = http.createServer((req, res) => {
 //   res.statusCode = 200;
@@ -21,7 +23,11 @@ const server = app.listen(port, () => {
 // });
 
 app.get('/', (req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.send(`Hello Player  - ${player.first} ${player.last}!`);
+  //res.statusCode = 200;
+  //res.setHeader("Content-Type", "text/html");
+  //res.send(`Hello Player  - ${player.first} ${player.last}!`);
+  res.render('index', {
+    firstName: player.first,
+    lastName: player.last
+  });
 });
