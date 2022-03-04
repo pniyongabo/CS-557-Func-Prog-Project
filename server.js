@@ -1,36 +1,26 @@
-// const http = require("http");
-const player = require("./player");
-const players = require('./data/players.json');
-
-// const hostname = "127.0.0.1";
 const port = 3000;
 const express = require('express');
+
+const players = require('./data/players.json');
+const nations = require('./data/nations.json');
+const clubs = require('./data/clubs.json');
+const leagues = require('./data/leagues.json');
+
+const mapOfNations = new Map(nations.map(obj => [obj.id, obj]));
+const mapOfClubs = new Map(clubs.map(obj => [obj.id, obj]));
+const mapOfLeagues= new Map(leagues.map(obj => [obj.id, obj]));
+
 
 const app = express();
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 
-// const server = http.createServer((req, res) => {
-//   res.statusCode = 200;
-//   res.setHeader("Content-Type", "text/plain");
-//   res.end(`Hello Player  - ${player.first} ${player.first}`);
-// });
-
 const server = app.listen(port, () => {
   console.log(`Express running → PORT ${server.address().port}`);
 });
 
-// server.listen(port, hostname, () => {
-//   console.log(`Server running at http://${hostname}:${port}/`);
-// });
-
 app.get('/', (req, res) => {
-  //res.statusCode = 200;
-  //res.setHeader("Content-Type", "text/html");
-  //res.send(`Hello Player  - ${player.first} ${player.last}!`);
   res.render('index', {
-    // firstName: player.first,
-    // lastName: player.last
     title: 'FIFA Squad Builder',
     players: players
   });
@@ -38,8 +28,22 @@ app.get('/', (req, res) => {
 
 app.get('/player', (req, res) => {
   const player = players.find(p => p.id == req.query.id);
+  // console.log(player.club);
+  // console.log(mapOfClubs[`${player.club}`]);
+  // console.log(mapOfClubs);
+  // console.log(typeof mapOfClubs);
+  if (mapOfClubs[`${player.club}`]) {
+
+    console.log("player club: " + mapOfClubs[player.club]);
+    player['clubName'] = mapOfClubs[player.club].name;
+  } else {
+    player['clubName']= "";
+  }
+  player['clubName'] = mapOfClubs.get(player.club) ? mapOfClubs.get(player.club).name : " - ";
+  player['leagueName'] = mapOfLeagues.get(player.league) ? mapOfLeagues.get(player.league).name : " - ";
+  player['nationName'] = mapOfNations.get(player.nation) ? mapOfNations.get(player.nation).name : " - ";
   res.render('player', {
-    title: `About ${player.name}`,
+    title: `About ${player.common_name}`,
     player,
   });
 });

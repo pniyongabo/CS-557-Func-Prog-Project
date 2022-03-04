@@ -8,6 +8,15 @@ block content
     no-repeat; background-size: cover;`)
     div.profile-details
       h1.profile-name
-        | #{player.first_name} #{player.last_name}
+        | #{player.name}
+      p
+        | Full Name: #{player.first_name} #{player.last_name}<br/>
+        | Common Name: #{player.common_name}<br/>
+        | FIFA Rating - Position: #{player.rating}<br/>
+        | Player Position: #{player.position}<br/>
+        | Player Age: #{player.age}<br/>
+        | National Team: #{player.nationName}<br/>
+        | Current League: #{player.leagueName}<br/>
+        | Current Club: #{player.clubName}
       a.button.button-twitter(href=`https://twitter.com/patricniyongabo`)
         | Follow me on Twitter
