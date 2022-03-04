@@ -1,5 +1,6 @@
 // const http = require("http");
 const player = require("./player");
+const players = require('./data/players.json');
 
 // const hostname = "127.0.0.1";
 const port = 3000;
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
   res.render('index', {
     // firstName: player.first,
     // lastName: player.last
-    title: 'FIFA Squad Builder'
+    title: 'FIFA Squad Builder',
+    players: players
   });
 });
