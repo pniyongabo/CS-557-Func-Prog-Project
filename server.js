@@ -7,6 +7,7 @@ const express = require('express');
 
 const app = express();
 app.set('view engine', 'pug');
+app.use(express.static(__dirname + '/public'));
 
 // const server = http.createServer((req, res) => {
 //   res.statusCode = 200;
@@ -27,7 +28,8 @@ app.get('/', (req, res) => {
   //res.setHeader("Content-Type", "text/html");
   //res.send(`Hello Player  - ${player.first} ${player.last}!`);
   res.render('index', {
-    firstName: player.first,
-    lastName: player.last
+    // firstName: player.first,
+    // lastName: player.last
+    title: 'FIFA Squad Builder'
   });
 });
