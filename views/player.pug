@@ -1,0 +1,13 @@
+extends default
+
+block header
+
+block content
+  div.profile
+    div.profile-image(style=`background: url('/images/bukayo-saka-600-338.jpeg') top center
+    no-repeat; background-size: cover;`)
+    div.profile-details
+      h1.profile-name
+        | #{player.first_name} #{player.last_name}
+      a.button.button-twitter(href=`https://twitter.com/patricniyongabo`)
+        | Follow me on Twitter

@@ -35,3 +35,11 @@ app.get('/', (req, res) => {
     players: players
   });
 });
+
+app.get('/player', (req, res) => {
+  const player = players.find(p => p.id == req.query.id);
+  res.render('player', {
+    title: `About ${player.name}`,
+    player,
+  });
+});

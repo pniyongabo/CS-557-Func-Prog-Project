@@ -8,7 +8,7 @@ block content
         div.player-image(style=`background: url('/images/bukayo-saka-600-338.jpeg') top center no-repeat; background-size: cover;`)
         h2.player-name
           | #{player.first_name} #{player.common_name} #{player.last_name}
-        a(href=`/profile?id=${player.id}`)
+        a(href=`/player?id=${player.id}`)
           | View Profile
 
 //- p(class=`${firstName}Paragraph` id=`${lastName}Paragraph`)
