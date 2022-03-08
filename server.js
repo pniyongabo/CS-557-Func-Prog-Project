@@ -20,11 +20,18 @@ const server = app.listen(port, () => {
 });
 
 app.get('/', (req, res) => {
-  res.render('index', {
+  res.render('homepage', {
     title: 'FIFA Squad Builder',
     players: players
   });
 });
+
+// app.get('/', (req, res) => {
+//   res.render('players_gallery', {
+//     title: 'FIFA Squad Builder',
+//     players: players
+//   });
+// });
 
 app.get('/player', (req, res) => {
   const player = players.find(p => p.id == req.query.id);
@@ -42,7 +49,7 @@ app.get('/player', (req, res) => {
   player['clubName'] = mapOfClubs.get(player.club) ? mapOfClubs.get(player.club).name : " - ";
   player['leagueName'] = mapOfLeagues.get(player.league) ? mapOfLeagues.get(player.league).name : " - ";
   player['nationName'] = mapOfNations.get(player.nation) ? mapOfNations.get(player.nation).name : " - ";
-  res.render('player', {
+  res.render('player_profile', {
     title: `About ${player.common_name}`,
     player,
   });
