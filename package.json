@@ -29,6 +29,7 @@
     "express": "^4.17.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "prompt-sync": "^4.2.0",
     "pug": "^3.0.2"
   },
   "devDependencies": {

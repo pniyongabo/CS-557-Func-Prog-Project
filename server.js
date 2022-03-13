@@ -19,6 +19,12 @@ const mapOfNations = new Map(nations.map((obj) => [obj.id, obj]));
 const mapOfClubs = new Map(clubs.map((obj) => [obj.id, obj]));
 const mapOfLeagues = new Map(leagues.map((obj) => [obj.id, obj]));
 
+const prompt = require("prompt-sync")({ sigint: true });
+
+const appTitle = 'FIFA Squad Builder';
+const formationMessage = `Please choose a formation - '442' or '433': `;
+
+
 // const app = express();
 // app.use(express.static(__dirname + '/public'));
 // app.set('view engine', 'pug');
@@ -119,8 +125,18 @@ improvedTeamChemistry442: ${improvedTeamChemistry442}, improvedTeamChemistry433:
   );
 
   return teamChemistry442 > teamChemistry433 ? bestEleven442 : bestEleven433;
-  //return bestEleven442;
 };
+
+const getBestElevenForFormation = (players, formation) => {
+  console.log(`Generating Squad for Formation: ${formation}`);
+  let bestEleven = {};
+  if (formation == '442') { 
+     bestEleven = getBestEleven442(players);
+  } else if (formation == '433') {  
+    bestEleven = getBestEleven433(players);
+  } 
+  return bestEleven;
+}
 
 const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
   const improvedTeam = team;
@@ -279,9 +295,22 @@ const getBestEleven433 = (players) => {
   return bestEleven;
 };
 
-console.log(`PRINTING ----- BEST SQUAD SO FAR`);
-const bestSquadAsArray = Object.values(getBestEleven(players));
-printDetailsForAListOfPlayers(bestSquadAsArray);
+const printSquadObject = (squad, formation) => {
+  let teamChemistryScore = 0;
+  if (formation == '442') {
+    teamChemistryScore = calculateTeamChemistry(squad, neighbors442);
+  } else if (formation == '433') {
+    teamChemistryScore = calculateTeamChemistry(squad, neighbors433);
+  }
+  console.log(`----------------------------------------`);
+  console.log(`Successfuly Generated Squad. Chemistry Score = ${teamChemistryScore}/100`);
+  console.log(`----------------------------------------`);
+  const squadAsArray = Object.values(squad);
+  printDetailsForAListOfPlayers(squadAsArray);
+  console.log(`----------------------------------------`);
+}
+
+
 
 /**
  * BEGIN - SERVING HTML FILE
@@ -332,3 +361,18 @@ printDetailsForAListOfPlayers(bestSquadAsArray);
 // const server = app.listen(port, () => {
 //   console.log(`Express running → PORT ${server.address().port}`);
 // });
+
+const getUserFormation = () => {
+  const userFormation = prompt(`${formationMessage}`);
+  console.log(`----------------------------------------`);
+  if (userFormation == '442' || userFormation == '433') {
+    const userSquad = getBestElevenForFormation(players, userFormation);
+    printSquadObject(userSquad, userFormation);
+  } else {
+    console.log(`Invalid formation input: ${userFormation}.`)
+    getUserFormation();
+  }
+}  
+
+console.log(`Welcome to ${appTitle}!`);
+getUserFormation();
