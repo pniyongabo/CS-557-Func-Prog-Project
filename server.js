@@ -86,24 +86,28 @@ const getBestEleven = (players) => {
   const teamChemistry442 = calculateTeamChemistry(bestEleven442, neighbors442);
   const teamChemistry433 = calculateTeamChemistry(bestEleven433, neighbors433);
 
-  console.log(`teamChemistry442: ${teamChemistry442}, teamChemistry433: ${teamChemistry433}`);
+  console.log(`teamChemistry442: ${teamChemistry442}, teamChemistry433: ${teamChemistry433} \n---------------------`);
   
   return (teamChemistry442 > teamChemistry433) ? bestEleven442 : bestEleven433;
+  //return bestEleven442;
 }
 
-const calculateTeamChemistry = (players, neighbors) => {
-  console.log();
+const calculateTeamChemistry = (team, neighbors) => {
   let totalChemistry = 0;
-  for (const player in players) {
-    console.log(player);
+  for (const player in team) {
     let playerChemistry = 0;
     let maxPlayerChemistry = 2 * neighbors[player].length;
-    for (const neighbor in neighbors[player]) {
-      playerChemistry += calculateChemistryBetween(player, neighbor);
+    let ns = "";
+    for (const neighbor of neighbors[player]) {
+      ns +=  `${team[neighbor].name}, `;
+      playerChemistry += calculateChemistryBetween(team[player], team[neighbor]);
     }
-    console.log( Math.floor((playerChemistry*10)/maxPlayerChemistry));
-    totalChemistry += Math.floor((playerChemistry*10)/maxPlayerChemistry);
+    
+    let roundedChemisty = Math.floor((playerChemistry*10)/maxPlayerChemistry);
+    console.log(`player = ${team[player].name}, neighbors = ${ns}, playerChemistry = ${playerChemistry}, roundedChemisty = ${roundedChemisty}, maxPlayerChemistry = ${maxPlayerChemistry} `);
+    totalChemistry += roundedChemisty;
   }
+  console.log("---------------------");
   return (totalChemistry > 100) ? 100 : totalChemistry;
 }
 
@@ -112,15 +116,12 @@ const calculateChemistryBetween = (player1 , player2) => {
   if (player1.nation === player2.nation) {
     chemistryBetween++;
   }
-
   if (player1.league === player2.league) {
     chemistryBetween++;
   }
-
   if (player1.club === player2.club) {
     chemistryBetween = 2;
   }
-
   return chemistryBetween;
 }
 
@@ -140,7 +141,7 @@ const calculateChemistryBetween = (player1 , player2) => {
       bestEleven442["lb"] = player;
     }
     else if (player.position == 'CB'){
-      if (bestEleven442.clcbb1 === undefined) {
+      if (bestEleven442.lcb === undefined) {
         bestEleven442["lcb"] = player;
       } else if(bestEleven442.rcb === undefined) {
         bestEleven442["rcb"] = player;
