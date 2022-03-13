@@ -72,13 +72,14 @@ const printDetailsForOnePlayer = (player) => {
 // printDetailsForAListOfPlayers(playersFromArsenal);
 
 /**
- * // create 2 or 3 squads: 442 and 443 // return the one with most chemistry
+ * // create 2 or 3 squads: 442 and 433 // return the one with most chemistry
  * @param {*} players 
  * @returns bestEleven squad
  */
 const getBestEleven = (players) => {
-  const bestEleven = getBestEleven442(players);
-  return bestEleven;
+  const bestEleven442 = getBestEleven442(players);
+  const bestEleven433 = getBestEleven433(players);
+  return bestEleven442;
 }
 
 /**
@@ -86,7 +87,7 @@ const getBestEleven = (players) => {
  * @param {*} players 
  * @returns bestEleven442 squad
  */
-const getBestEleven442 = (players) => {
+ const getBestEleven442 = (players) => {
   const bestEleven442 = {};
   let numberOfPlayerAdded = 0;
   players.map(player => {
@@ -98,10 +99,11 @@ const getBestEleven442 = (players) => {
       bestEleven442["lb"] = player;
     }
     else if (player.position == 'CB'){
-      bestEleven442["cb1"] = player;
-    }
-    else if (player.position == 'CDM'){
-      bestEleven442["cb2"] = player;
+      if (bestEleven442.clcbb1 === undefined) {
+        bestEleven442["lcb"] = player;
+      } else if(bestEleven442.rcb === undefined) {
+        bestEleven442["rcb"] = player;
+      }
     }
     else if (player.position == 'RB'){
       bestEleven442["rb"] = player;
@@ -109,20 +111,22 @@ const getBestEleven442 = (players) => {
     else if (player.position == 'LM'){
       bestEleven442["lm"] = player;
     }
-    else if (player.position == 'CM'){
-      bestEleven442["cm1"] = player;
-    }
-    else if (player.position == 'CAM'){
-      bestEleven442["cm2"] = player;
+    else if (player.position == 'CM' || player.position == 'CAM' || player.position == 'CDM'){
+      if (bestEleven442.lcm === undefined) {
+        bestEleven442["lcm"] = player;
+      } else if(bestEleven442.rcm === undefined) {
+        bestEleven442["rcm"] = player;
+      }
     }
     else if (player.position == 'RM'){
       bestEleven442["rm"] = player;
     }
-    else if (player.position == 'ST'){
-      bestEleven442["st1"] = player;
-    }
-    else if (player.position == 'CF'){
-      bestEleven442.st2 = player;
+    else if (player.position == 'ST' || player.position == 'CF'){
+      if (bestEleven442.lst === undefined) {
+        bestEleven442["lst"] = player;
+      } else if(bestEleven442.rst === undefined) {
+        bestEleven442["rst"] = player;
+      }
     } else {
       numberOfPlayerAdded--;
     }
@@ -132,6 +136,55 @@ const getBestEleven442 = (players) => {
     }
   });
   return bestEleven442;
+}
+
+const getBestEleven433 = (players) => {
+  const bestEleven433 = {};
+  let numberOfPlayerAdded = 0;
+  players.map(player => {
+    numberOfPlayerAdded++;
+    if (player.position == 'GK'){
+      bestEleven433["gk"] = player;
+    }
+    else if (player.position == 'LB'){
+      bestEleven433["lb"] = player;
+    }
+    else if (player.position == 'CB'){
+      if (bestEleven433.lcb === undefined) {
+        bestEleven433["lcb"] = player;
+      } else if(bestEleven433.rcb === undefined) {
+        bestEleven433["rcb"] = player;
+      }
+    }
+    else if (player.position == 'RB'){
+      bestEleven433["rb"] = player;
+    }
+    else if (player.position == 'CM' || player.position == 'CAM' || player.position == 'CDM'){
+      if (bestEleven433.lcm === undefined) {
+        bestEleven433["lcm"] = player;
+      } else if(bestEleven433.cm === undefined) {
+        bestEleven433["cm"] = player;
+      } else if(bestEleven433.rcm === undefined) {
+        bestEleven433["rcm"] = player;
+      }
+    }
+    else if (player.position == 'LW' || player.position == 'LM'){ 
+      bestEleven433["lw"] = player;
+    }
+    else if (player.position == 'ST' || player.position == 'CF'){
+      bestEleven433["st"] = player;
+    }
+    else if (player.position == 'RW' || player.position == 'RM'){
+      bestEleven433["rw"] = player;
+    } else {
+      numberOfPlayerAdded--;
+    }
+
+    if (numberOfPlayerAdded === 11) {
+      return bestEleven433;
+    }
+  });
+  return bestEleven433;
 }
 
 console.log(`PRINTING ----- BEST SQUAD SO FAR`);
