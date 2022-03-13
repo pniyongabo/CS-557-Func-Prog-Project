@@ -21,9 +21,13 @@ const mapOfLeagues = new Map(leagues.map((obj) => [obj.id, obj]));
 
 const prompt = require("prompt-sync")({ sigint: true });
 
-const appTitle = 'FIFA Squad Builder';
+const appTitle = "FIFA Squad Builder";
 const formationMessage = `Please choose a formation - '442' or '433': `;
+const chemistryPrefMessage = `Please choose a pivot position from the list above : `;
 
+let currentSquad = {};
+let currentFormation = "";
+let currentNeighborsMap = {};
 
 // const app = express();
 // app.use(express.static(__dirname + '/public'));
@@ -130,19 +134,23 @@ improvedTeamChemistry442: ${improvedTeamChemistry442}, improvedTeamChemistry433:
 const getBestElevenForFormation = (players, formation) => {
   console.log(`Generating Squad for Formation: ${formation}`);
   let bestEleven = {};
-  if (formation == '442') { 
-     bestEleven = getBestEleven442(players);
-  } else if (formation == '433') {  
+  if (formation == "442") {
+    bestEleven = getBestEleven442(players);
+  } else if (formation == "433") {
     bestEleven = getBestEleven433(players);
-  } 
+  }
   return bestEleven;
-}
+};
 
 const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
   const improvedTeam = team;
   const pivotPlayer = team[pivotPos];
 
-  const pivotNeighborPlayers = [...filterPlayersByNation(pivotPlayer.nation), ...filterPlayersByLeague(pivotPlayer.league), ...filterPlayersByClub(pivotPlayer.club)];
+  const pivotNeighborPlayers = [
+    ...filterPlayersByNation(pivotPlayer.nation),
+    ...filterPlayersByLeague(pivotPlayer.league),
+    ...filterPlayersByClub(pivotPlayer.club),
+  ];
 
   //console.log("pivotNeighborPlayers length: "+pivotNeighborPlayers.length);
   let pivotNeighborPlayersNoDup = (uniq = [...new Set(pivotNeighborPlayers)]);
@@ -297,9 +305,9 @@ const getBestEleven433 = (players) => {
 
 const printSquadObject = (squad, formation) => {
   let teamChemistryScore = 0;
-  if (formation == '442') {
+  if (formation == "442") {
     teamChemistryScore = calculateTeamChemistry(squad, neighbors442);
-  } else if (formation == '433') {
+  } else if (formation == "433") {
     teamChemistryScore = calculateTeamChemistry(squad, neighbors433);
   }
   console.log(`----------------------------------------`);
@@ -308,9 +316,7 @@ const printSquadObject = (squad, formation) => {
   const squadAsArray = Object.values(squad);
   printDetailsForAListOfPlayers(squadAsArray);
   console.log(`----------------------------------------`);
-}
-
-
+};
 
 /**
  * BEGIN - SERVING HTML FILE
@@ -365,14 +371,42 @@ const printSquadObject = (squad, formation) => {
 const getUserFormation = () => {
   const userFormation = prompt(`${formationMessage}`);
   console.log(`----------------------------------------`);
-  if (userFormation == '442' || userFormation == '433') {
-    const userSquad = getBestElevenForFormation(players, userFormation);
-    printSquadObject(userSquad, userFormation);
+  if (userFormation == "442" || userFormation == "433") {
+    currentFormation = userFormation;
+    currentNeighborsMap = userFormation == "442" ? neighbors442 : neighbors433;
+    currentSquad = getBestElevenForFormation(players, userFormation);
+    printSquadObject(currentSquad, currentFormation);
   } else {
-    console.log(`Invalid formation input: ${userFormation}.`)
+    console.log(`Invalid formation input: ${userFormation}.`);
     getUserFormation();
   }
-}  
+};
+
+const getUserChemistryPreferences = () => {
+  console.log(
+    `Now that we have a starting squad, let's try to improve the overall team chemistry.
+We will start with one position, and try to replace players in adjacent positions with players from the same nation/league/club.
+
+List of positions for formation - ${currentFormation}: ${Object.keys(currentNeighborsMap).join(", ")}`
+  );
+
+  const userChemistryPosition = prompt(`${chemistryPrefMessage}`);
+  console.log(`----------------------------------------`);
+  if (Object.keys(currentNeighborsMap).includes(userChemistryPosition)) {
+    const pivotPlayer = currentSquad[userChemistryPosition];
+    console.log(
+      `Improving chemistry by building squad around '${pivotPlayer.name}' (${userChemistryPosition}) from '${
+        mapOfNations.get(pivotPlayer.nation).name
+      }' who plays for '${mapOfClubs.get(pivotPlayer.club).name}' in the '${mapOfLeagues.get(pivotPlayer.league).name}'.`
+    );
+    currentSquad = improveTeamChemistry(currentSquad, userChemistryPosition, currentNeighborsMap);
+    printSquadObject(currentSquad, currentFormation);
+  } else {
+    console.log(`Invalid position input: ${userChemistryPosition}.`);
+    getUserChemistryPreferences();
+  }
+};
 
 console.log(`Welcome to ${appTitle}!`);
 getUserFormation();
+getUserChemistryPreferences();
