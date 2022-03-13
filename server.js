@@ -6,10 +6,13 @@ const nations = require('./data/nations.json');
 const clubs = require('./data/clubs.json');
 const leagues = require('./data/leagues.json');
 
-const messi = require('./data/individuals/messi.json');
-const dias = require('./data/individuals/dias.json');
-const jorginho = require('./data/individuals/jorginho.json');
-const donnarumma = require('./data/individuals/donnarumma.json');
+const neighbors433 = require('./data/formations/433.json');
+const neighbors442 = require('./data/formations/442.json');
+
+// const messi = require('./data/individuals/messi.json');
+// const dias = require('./data/individuals/dias.json');
+// const jorginho = require('./data/individuals/jorginho.json');
+// const donnarumma = require('./data/individuals/donnarumma.json');
 
 const mapOfNations = new Map(nations.map(obj => [obj.id, obj]));
 const mapOfClubs = new Map(clubs.map(obj => [obj.id, obj]));
@@ -20,21 +23,21 @@ const mapOfLeagues= new Map(leagues.map(obj => [obj.id, obj]));
 // app.use(express.static(__dirname + '/public'));
 // app.set('view engine', 'pug');
 
-class SquadOfEleven {
-  constructor() {
-    this.gk = donnarumma;
-    this.lb = dias;
-    this.cb1 = dias;
-    this.cb2 = dias;
-    this.rb = dias;
-    this.lm = jorginho;
-    this.cm1 = jorginho;
-    this.cm2 = jorginho;
-    this.rm = jorginho;
-    this.st1 = messi;
-    this.st2 = messi;
-  }
-}
+// class SquadOfEleven {
+//   constructor() {
+//     this.gk = donnarumma;
+//     this.lb = dias;
+//     this.cb1 = dias;
+//     this.cb2 = dias;
+//     this.rb = dias;
+//     this.lm = jorginho;
+//     this.cm1 = jorginho;
+//     this.cm2 = jorginho;
+//     this.rm = jorginho;
+//     this.st1 = messi;
+//     this.st2 = messi;
+//   }
+// }
 
 const filterPlayersByNation = (name) => {
   return players.filter(player => mapOfNations.get(player.nation) && mapOfNations.get(player.nation).name == name);
@@ -72,18 +75,56 @@ const printDetailsForOnePlayer = (player) => {
 // printDetailsForAListOfPlayers(playersFromArsenal);
 
 /**
- * // create 2 or 3 squads: 442 and 433 // return the one with most chemistry
+ * create 2 or 3 squads: 442 and 433; return the one with most chemistry
  * @param {*} players 
  * @returns bestEleven squad
  */
 const getBestEleven = (players) => {
   const bestEleven442 = getBestEleven442(players);
   const bestEleven433 = getBestEleven433(players);
-  return bestEleven442;
+
+  const teamChemistry442 = calculateTeamChemistry(bestEleven442, neighbors442);
+  const teamChemistry433 = calculateTeamChemistry(bestEleven433, neighbors433);
+
+  console.log(`teamChemistry442: ${teamChemistry442}, teamChemistry433: ${teamChemistry433}`);
+  
+  return (teamChemistry442 > teamChemistry433) ? bestEleven442 : bestEleven433;
+}
+
+const calculateTeamChemistry = (players, neighbors) => {
+  console.log();
+  let totalChemistry = 0;
+  for (const player in players) {
+    console.log(player);
+    let playerChemistry = 0;
+    let maxPlayerChemistry = 2 * neighbors[player].length;
+    for (const neighbor in neighbors[player]) {
+      playerChemistry += calculateChemistryBetween(player, neighbor);
+    }
+    console.log( Math.floor((playerChemistry*10)/maxPlayerChemistry));
+    totalChemistry += Math.floor((playerChemistry*10)/maxPlayerChemistry);
+  }
+  return (totalChemistry > 100) ? 100 : totalChemistry;
+}
+
+const calculateChemistryBetween = (player1 , player2) => {
+  let chemistryBetween = 0;
+  if (player1.nation === player2.nation) {
+    chemistryBetween++;
+  }
+
+  if (player1.league === player2.league) {
+    chemistryBetween++;
+  }
+
+  if (player1.club === player2.club) {
+    chemistryBetween = 2;
+  }
+
+  return chemistryBetween;
 }
 
 /**
- * // start with goal-keeper // add one CB, CM, ST // add one CB, CM, ST
  * @param {*} players 
  * @returns bestEleven442 squad
  */
@@ -138,6 +179,11 @@ const getBestEleven = (players) => {
   return bestEleven442;
 }
 
+/**
+ * 
+ * @param {*} players 
+ * @returns bestEleven433 squad
+ */
 const getBestEleven433 = (players) => {
   const bestEleven433 = {};
   let numberOfPlayerAdded = 0;

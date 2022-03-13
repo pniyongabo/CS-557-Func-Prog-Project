@@ -1,0 +1,16 @@
+{
+  "gk": ["lcb", "rcb"],
+
+  "lb": ["lm", "lcb"],
+  "lcb": ["lb", "gk", "rcb", "lcm"],
+  "rcb": ["rb", "gk", "lcb", "rcm"],
+  "rb": ["rm", "rcb"],
+
+  "lm": ["lst, lcm", "rm"],
+  "lcm": ["lm", "lcb", "lst", "rcm"],
+  "rcm": ["rm", "rcb", "rst", "lcm"],
+  "rm": ["rst", "rcm", "rb"],
+
+  "lst": ["lm", "lcm", "rst"],
+  "rst": ["rm", "rcm", "lst"]
+}

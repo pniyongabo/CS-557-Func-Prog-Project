@@ -1,0 +1,16 @@
+{
+  "gk": ["lcb", "rcb"],
+
+  "lb": ["lcm", "lcb"],
+  "lcb": ["lb", "gk", "rcb", "cm"],
+  "rcb": ["rb", "gk", "lcb", "cm"],
+  "rb": ["rcm", "rcb"],
+
+  "lcm": ["lb", "lw", "cm"],
+  "cm": ["lcb", "rcb", "lcm", "cm", "st"],
+  "rcm": ["lcb", "rcb", "cm"],
+
+  "lw": ["lcm", "st"],
+  "st": ["lw", "rw", "cm"],
+  "rw": ["rcm", "st"]
+}
