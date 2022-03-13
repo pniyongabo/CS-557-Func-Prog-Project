@@ -1,23 +1,23 @@
 // const port = 3000;
 // const express = require('express');
 
-const players = require('./data/players.json');
-const nations = require('./data/nations.json');
-const clubs = require('./data/clubs.json');
-const leagues = require('./data/leagues.json');
+const players = require("./data/players.json");
+const nations = require("./data/nations.json");
+const clubs = require("./data/clubs.json");
+const leagues = require("./data/leagues.json");
 
-const neighbors433 = require('./data/formations/433.json');
-const neighbors442 = require('./data/formations/442.json');
+const neighbors433 = require("./data/formations/433.json");
+const neighbors442 = require("./data/formations/442.json");
+const altPositionsMap = require("./data/formations/altPositionsMap.json");
 
 // const messi = require('./data/individuals/messi.json');
 // const dias = require('./data/individuals/dias.json');
 // const jorginho = require('./data/individuals/jorginho.json');
 // const donnarumma = require('./data/individuals/donnarumma.json');
 
-const mapOfNations = new Map(nations.map(obj => [obj.id, obj]));
-const mapOfClubs = new Map(clubs.map(obj => [obj.id, obj]));
-const mapOfLeagues= new Map(leagues.map(obj => [obj.id, obj]));
-
+const mapOfNations = new Map(nations.map((obj) => [obj.id, obj]));
+const mapOfClubs = new Map(clubs.map((obj) => [obj.id, obj]));
+const mapOfLeagues = new Map(leagues.map((obj) => [obj.id, obj]));
 
 // const app = express();
 // app.use(express.static(__dirname + '/public'));
@@ -39,17 +39,33 @@ const mapOfLeagues= new Map(leagues.map(obj => [obj.id, obj]));
 //   }
 // }
 
-const filterPlayersByNation = (name) => {
-  return players.filter(player => mapOfNations.get(player.nation) && mapOfNations.get(player.nation).name == name);
-}
+const filterPlayersByNation = (id) => {
+  return players.filter((player) => player.nation === id);
+};
 
-const filterPlayersByLeague = (name) => {
-  return players.filter(player => mapOfLeagues.get(player.league) && mapOfLeagues.get(player.league).name == name);
-}
+const filterPlayersByLeague = (id) => {
+  return players.filter((player) => player.league === id);
+};
 
-const filterPlayersByClub = (name) => {
-  return players.filter(player => mapOfClubs.get(player.club) && mapOfClubs.get(player.club).name == name);
-}
+const filterPlayersByClub = (id) => {
+  return players.filter((player) => player.club === id);
+};
+
+const filterPlayersByNationName = (name) => {
+  return players.filter((player) => mapOfNations.get(player.nation) && mapOfNations.get(player.nation).name === name);
+};
+
+const filterPlayersByLeagueName = (name) => {
+  return players.filter((player) => mapOfLeagues.get(player.league) && mapOfLeagues.get(player.league).name === name);
+};
+
+const filterPlayersByClubName = (name) => {
+  return players.filter((player) => mapOfClubs.get(player.club) && mapOfClubs.get(player.club).name === name);
+};
+
+const filterPlayersByPosition = (playersList, pos) => {
+  return playersList.filter((player) => player.position.toLowerCase() == pos);
+};
 
 // Example usage of Filter Methods
 // const playersFromNetherlands = filterPlayersByNation('Netherlands');
@@ -59,13 +75,17 @@ const filterPlayersByClub = (name) => {
 // Print the results using Map
 const printDetailsForAListOfPlayers = (listOfPlayers) => {
   console.log(`| ${"PLAYER NAME".padEnd(25)} | ${"AGE".padEnd(3)} | ${"RATING".padEnd(6)} | ${"POSITION".padEnd(8)} |`);
-  listOfPlayers.map(player => printDetailsForOnePlayer(player));
-  console.log("")
-}
+  listOfPlayers.map((player) => printDetailsForOnePlayer(player));
+  console.log("");
+};
 
 const printDetailsForOnePlayer = (player) => {
-  console.log(`| ${player.name.padEnd(25)} | ${player.age.toString().padEnd(3)} | ${player.rating.toString().padEnd(6)} | ${player.position.padEnd(8)} |`);
-}
+  console.log(
+    `| ${player.name.padEnd(25)} | ${player.age.toString().padEnd(3)} | ${player.rating
+      .toString()
+      .padEnd(6)} | ${player.position.padEnd(8)} |`
+  );
+};
 
 // console.log(`PRINTING ----- playersFromNetherlands`);
 // printDetailsForAListOfPlayers(playersFromNetherlands);
@@ -76,7 +96,7 @@ const printDetailsForOnePlayer = (player) => {
 
 /**
  * create 2 or 3 squads: 442 and 433; return the one with most chemistry
- * @param {*} players 
+ * @param {*} players
  * @returns bestEleven squad
  */
 const getBestEleven = (players) => {
@@ -86,32 +106,71 @@ const getBestEleven = (players) => {
   const teamChemistry442 = calculateTeamChemistry(bestEleven442, neighbors442);
   const teamChemistry433 = calculateTeamChemistry(bestEleven433, neighbors433);
 
-  console.log(`teamChemistry442: ${teamChemistry442}, teamChemistry433: ${teamChemistry433} \n---------------------`);
-  
-  return (teamChemistry442 > teamChemistry433) ? bestEleven442 : bestEleven433;
-  //return bestEleven442;
-}
+  const improvedBestEleven442 = improveTeamChemistry(bestEleven442, "lcm", neighbors442);
+  const improvedBestEleven433 = improveTeamChemistry(bestEleven433, "cm", neighbors433);
 
-const calculateTeamChemistry = (team, neighbors) => {
-  let totalChemistry = 0;
-  for (const player in team) {
-    let playerChemistry = 0;
-    let maxPlayerChemistry = 2 * neighbors[player].length;
-    let ns = "";
-    for (const neighbor of neighbors[player]) {
-      ns +=  `${team[neighbor].name}, `;
-      playerChemistry += calculateChemistryBetween(team[player], team[neighbor]);
+  const improvedTeamChemistry442 = calculateTeamChemistry(improvedBestEleven442, neighbors442);
+  const improvedTeamChemistry433 = calculateTeamChemistry(improvedBestEleven433, neighbors433);
+
+  console.log(
+    `teamChemistry442: ${teamChemistry442}, teamChemistry433: ${teamChemistry433}
+improvedTeamChemistry442: ${improvedTeamChemistry442}, improvedTeamChemistry433: ${improvedTeamChemistry433}
+------------------`
+  );
+
+  return teamChemistry442 > teamChemistry433 ? bestEleven442 : bestEleven433;
+  //return bestEleven442;
+};
+
+const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
+  const improvedTeam = team;
+  const pivotPlayer = team[pivotPos];
+
+  const pivotNeighborPlayers = [...filterPlayersByNation(pivotPlayer.nation), ...filterPlayersByLeague(pivotPlayer.league), ...filterPlayersByClub(pivotPlayer.club)];
+
+  //console.log("pivotNeighborPlayers length: "+pivotNeighborPlayers.length);
+  let pivotNeighborPlayersNoDup = (uniq = [...new Set(pivotNeighborPlayers)]);
+  //console.log("pivotNeighborPlayersNoDup length: "+ pivotNeighborPlayersNoDup.length);
+
+  for (const neighborPos of neighborsMap[pivotPos]) {
+    const formattedPosition = altPositionsMap.hasOwnProperty(neighborPos) ? altPositionsMap[neighborPos] : neighborPos;
+    let potentialPlayersforPos = filterPlayersByPosition(pivotNeighborPlayersNoDup, formattedPosition);
+
+    //console.log("potentialPlayerforPos: "+ neighborPos + " has length: "+ potentialPlayersforPos.length);
+    for (const potentialPlayer of potentialPlayersforPos) {
+      if (
+        calculateChemistryBetween(pivotPlayer, potentialPlayer) >
+        calculateChemistryBetween(pivotPlayer, improvedTeam[neighborPos])
+      ) {
+        improvedTeam[neighborPos] = potentialPlayer;
+        //console.log("HIT THE JACKPOT");
+        break;
+      }
     }
-    
-    let roundedChemisty = Math.floor((playerChemistry*10)/maxPlayerChemistry);
-    console.log(`player = ${team[player].name}, neighbors = ${ns}, playerChemistry = ${playerChemistry}, roundedChemisty = ${roundedChemisty}, maxPlayerChemistry = ${maxPlayerChemistry} `);
+  }
+  return improvedTeam;
+};
+
+const calculateTeamChemistry = (team, neighborsMap) => {
+  let totalChemistry = 0;
+  for (const pos in team) {
+    let playerChemistry = 0;
+    let maxPlayerChemistry = 2 * neighborsMap[pos].length;
+    //let neighborPlayersNames = "";
+    for (const neighborPos of neighborsMap[pos]) {
+      //neighborPlayersNames += `${team[neighborPos].name}, `;
+      playerChemistry += calculateChemistryBetween(team[pos], team[neighborPos]);
+    }
+
+    let roundedChemisty = Math.floor((playerChemistry * 10) / maxPlayerChemistry);
+    //console.log(`player = ${team[player].name}, neighbors = ${neighborPlayersNames}, playerChemistry = ${playerChemistry}, roundedChemisty = ${roundedChemisty}, maxPlayerChemistry = ${maxPlayerChemistry} `);
     totalChemistry += roundedChemisty;
   }
-  console.log("---------------------");
-  return (totalChemistry > 100) ? 100 : totalChemistry;
-}
+  //console.log("---------------------");
+  return totalChemistry > 100 ? 100 : totalChemistry;
+};
 
-const calculateChemistryBetween = (player1 , player2) => {
+const calculateChemistryBetween = (player1, player2) => {
   let chemistryBetween = 0;
   if (player1.nation === player2.nation) {
     chemistryBetween++;
@@ -123,116 +182,102 @@ const calculateChemistryBetween = (player1 , player2) => {
     chemistryBetween = 2;
   }
   return chemistryBetween;
-}
+};
 
 /**
- * @param {*} players 
+ * @param {*} players
  * @returns bestEleven442 squad
  */
- const getBestEleven442 = (players) => {
-  const bestEleven442 = {};
+const getBestEleven442 = (players) => {
+  const bestEleven = {};
   let numberOfPlayerAdded = 0;
-  players.map(player => {
+  players.map((player) => {
     numberOfPlayerAdded++;
-    if (player.position == 'GK'){
-      bestEleven442["gk"] = player;
-    }
-    else if (player.position == 'LB'){
-      bestEleven442["lb"] = player;
-    }
-    else if (player.position == 'CB'){
-      if (bestEleven442.lcb === undefined) {
-        bestEleven442["lcb"] = player;
-      } else if(bestEleven442.rcb === undefined) {
-        bestEleven442["rcb"] = player;
+    if (player.position == "GK") {
+      bestEleven["gk"] = player;
+    } else if (player.position == "LB") {
+      bestEleven["lb"] = player;
+    } else if (player.position == "CB") {
+      if (bestEleven.lcb === undefined) {
+        bestEleven["lcb"] = player;
+      } else if (bestEleven.rcb === undefined) {
+        bestEleven["rcb"] = player;
       }
-    }
-    else if (player.position == 'RB'){
-      bestEleven442["rb"] = player;
-    }
-    else if (player.position == 'LM'){
-      bestEleven442["lm"] = player;
-    }
-    else if (player.position == 'CM' || player.position == 'CAM' || player.position == 'CDM'){
-      if (bestEleven442.lcm === undefined) {
-        bestEleven442["lcm"] = player;
-      } else if(bestEleven442.rcm === undefined) {
-        bestEleven442["rcm"] = player;
+    } else if (player.position == "RB") {
+      bestEleven["rb"] = player;
+    } else if (player.position == "LM") {
+      bestEleven["lm"] = player;
+    } else if (player.position == "CM" || player.position == "CAM" || player.position == "CDM") {
+      if (bestEleven.lcm === undefined) {
+        bestEleven["lcm"] = player;
+      } else if (bestEleven.rcm === undefined) {
+        bestEleven["rcm"] = player;
       }
-    }
-    else if (player.position == 'RM'){
-      bestEleven442["rm"] = player;
-    }
-    else if (player.position == 'ST' || player.position == 'CF'){
-      if (bestEleven442.lst === undefined) {
-        bestEleven442["lst"] = player;
-      } else if(bestEleven442.rst === undefined) {
-        bestEleven442["rst"] = player;
+    } else if (player.position == "RM") {
+      bestEleven["rm"] = player;
+    } else if (player.position == "ST" || player.position == "CF") {
+      if (bestEleven.lst === undefined) {
+        bestEleven["lst"] = player;
+      } else if (bestEleven.rst === undefined) {
+        bestEleven["rst"] = player;
       }
     } else {
       numberOfPlayerAdded--;
     }
 
     if (numberOfPlayerAdded === 11) {
-      return bestEleven442;
+      return bestEleven;
     }
   });
-  return bestEleven442;
-}
+  return bestEleven;
+};
 
 /**
- * 
- * @param {*} players 
+ *
+ * @param {*} players
  * @returns bestEleven433 squad
  */
 const getBestEleven433 = (players) => {
-  const bestEleven433 = {};
+  const bestEleven = {};
   let numberOfPlayerAdded = 0;
-  players.map(player => {
+  players.map((player) => {
     numberOfPlayerAdded++;
-    if (player.position == 'GK'){
-      bestEleven433["gk"] = player;
-    }
-    else if (player.position == 'LB'){
-      bestEleven433["lb"] = player;
-    }
-    else if (player.position == 'CB'){
-      if (bestEleven433.lcb === undefined) {
-        bestEleven433["lcb"] = player;
-      } else if(bestEleven433.rcb === undefined) {
-        bestEleven433["rcb"] = player;
+    if (player.position == "GK") {
+      bestEleven["gk"] = player;
+    } else if (player.position == "LB") {
+      bestEleven["lb"] = player;
+    } else if (player.position == "CB") {
+      if (bestEleven.lcb === undefined) {
+        bestEleven["lcb"] = player;
+      } else if (bestEleven.rcb === undefined) {
+        bestEleven["rcb"] = player;
       }
-    }
-    else if (player.position == 'RB'){
-      bestEleven433["rb"] = player;
-    }
-    else if (player.position == 'CM' || player.position == 'CAM' || player.position == 'CDM'){
-      if (bestEleven433.lcm === undefined) {
-        bestEleven433["lcm"] = player;
-      } else if(bestEleven433.cm === undefined) {
-        bestEleven433["cm"] = player;
-      } else if(bestEleven433.rcm === undefined) {
-        bestEleven433["rcm"] = player;
+    } else if (player.position == "RB") {
+      bestEleven["rb"] = player;
+    } else if (player.position == "CM" || player.position == "CAM" || player.position == "CDM") {
+      if (bestEleven.lcm === undefined) {
+        bestEleven["lcm"] = player;
+      } else if (bestEleven.cm === undefined) {
+        bestEleven["cm"] = player;
+      } else if (bestEleven.rcm === undefined) {
+        bestEleven["rcm"] = player;
       }
-    }
-    else if (player.position == 'LW' || player.position == 'LM'){ 
-      bestEleven433["lw"] = player;
-    }
-    else if (player.position == 'ST' || player.position == 'CF'){
-      bestEleven433["st"] = player;
-    }
-    else if (player.position == 'RW' || player.position == 'RM'){
-      bestEleven433["rw"] = player;
+    } else if (player.position == "LW" || player.position == "LM") {
+      bestEleven["lw"] = player;
+    } else if (player.position == "ST" || player.position == "CF") {
+      bestEleven["st"] = player;
+    } else if (player.position == "RW" || player.position == "RM") {
+      bestEleven["rw"] = player;
     } else {
       numberOfPlayerAdded--;
     }
 
     if (numberOfPlayerAdded === 11) {
-      return bestEleven433;
+      return bestEleven;
     }
   });
-  return bestEleven433;
-}
+  return bestEleven;
+};
 
 console.log(`PRINTING ----- BEST SQUAD SO FAR`);
 const bestSquadAsArray = Object.values(getBestEleven(players));
@@ -255,8 +300,8 @@ printDetailsForAListOfPlayers(bestSquadAsArray);
  */
 
 /*
-****************************************************************
-*/
+ ****************************************************************
+ */
 
 /**
  * BEGIN - PUG CODE
