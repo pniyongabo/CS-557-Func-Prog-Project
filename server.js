@@ -29,6 +29,14 @@ let currentSquad = {};
 let currentFormation = "";
 let currentNeighborsMap = {};
 
+const getFromMap = (map, id) => {
+  if (map.get(id)) {
+    return map.get(id);
+  } else {
+    return { id: id, name: "-" };
+  }
+};
+
 // const app = express();
 // app.use(express.static(__dirname + '/public'));
 // app.set('view engine', 'pug');
@@ -160,14 +168,20 @@ const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
     const formattedPosition = altPositionsMap.hasOwnProperty(neighborPos) ? altPositionsMap[neighborPos] : neighborPos;
     let potentialPlayersforPos = filterPlayersByPosition(pivotNeighborPlayersNoDup, formattedPosition);
 
-    //console.log("potentialPlayerforPos: "+ neighborPos + " has length: "+ potentialPlayersforPos.length);
+    const neighborPlayer = improvedTeam[neighborPos];
     for (const potentialPlayer of potentialPlayersforPos) {
       if (
         calculateChemistryBetween(pivotPlayer, potentialPlayer) >
         calculateChemistryBetween(pivotPlayer, improvedTeam[neighborPos])
       ) {
+        console.log(`For position '${neighborPos}' - replacing '${neighborPlayer.name}' (${
+          getFromMap(mapOfNations, neighborPlayer.nation).name
+        }/${getFromMap(mapOfClubs, neighborPlayer.club).name}/${getFromMap(mapOfLeagues, neighborPlayer.league).name})
+          with '${potentialPlayer.name}' (${getFromMap(mapOfNations, potentialPlayer.nation).name}/${
+          getFromMap(mapOfClubs, potentialPlayer.club).name
+        }/${getFromMap(mapOfLeagues, potentialPlayer.league).name}).`);
+
         improvedTeam[neighborPos] = potentialPlayer;
-        //console.log("HIT THE JACKPOT");
         break;
       }
     }
@@ -395,9 +409,12 @@ List of positions for formation - ${currentFormation}: ${Object.keys(currentNeig
   if (Object.keys(currentNeighborsMap).includes(userChemistryPosition)) {
     const pivotPlayer = currentSquad[userChemistryPosition];
     console.log(
-      `Improving chemistry by building squad around '${pivotPlayer.name}' (${userChemistryPosition}) from '${
-        mapOfNations.get(pivotPlayer.nation).name
-      }' who plays for '${mapOfClubs.get(pivotPlayer.club).name}' in the '${mapOfLeagues.get(pivotPlayer.league).name}'.`
+      `Improving chemistry by building squad around
+        '${pivotPlayer.name}' (${userChemistryPosition}) from '${
+        getFromMap(mapOfNations, pivotPlayer.nation).name
+      }' who plays for '${getFromMap(mapOfClubs, pivotPlayer.club).name}' in the '${
+        getFromMap(mapOfLeagues, pivotPlayer.league).name
+      }'\n.`
     );
     currentSquad = improveTeamChemistry(currentSquad, userChemistryPosition, currentNeighborsMap);
     printSquadObject(currentSquad, currentFormation);
