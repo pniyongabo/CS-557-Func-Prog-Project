@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js --ext js,pug"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -25,14 +25,6 @@
   },
   "homepage": "https://github.com/pniyongabo/CS-557-Func-Prog-Project#readme",
   "dependencies": {
-    "body-parser": "^1.19.1",
-    "express": "^4.17.3",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.1",
-    "prompt-sync": "^4.2.0",
-    "pug": "^3.0.2"
-  },
-  "devDependencies": {
-    "mocha": "^9.2.0"
+    "prompt-sync": "^4.2.0"
   }
 }
