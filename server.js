@@ -18,12 +18,14 @@ const uniqueLeagues = [...new Set(players.map((p) => p.league))];
 let currentSquad = {};
 let currentFormation = "";
 let currentNeighborsMap = {};
+let randomMode = true;
+let currentLeagueName = "";
 
 const getFromMap = (map, id) => {
   if (map.get(id)) {
     return map.get(id);
   } else {
-    return { id: id, name: "-" };
+    return { "id": id, "name": "-" };
   }
 };
 
@@ -76,18 +78,6 @@ const shuffleArray = (arr) => {
     .map(({ element }) => element);
 };
 
-// Example usage of Filter Methods
-// const playersFromNetherlands = filterPlayersByNation('Netherlands');
-// const playersFromPremierLeague = filterPlayersByLeague('Premier League');
-// const playersFromArsenal = filterPlayersByClub('Arsenal');
-
-// console.log(`PRINTING ----- playersFromNetherlands`);
-// printDetailsForAListOfPlayers(playersFromNetherlands);
-// console.log(`PRINTING ----- playersFromPremierLeague`);
-// printDetailsForAListOfPlayers(playersFromPremierLeague);
-// console.log(`PRINTING ----- playersFromArsenal`);
-// printDetailsForAListOfPlayers(playersFromArsenal);
-
 /**
  * create 2 or 3 squads: 442 and 433; return the one with most chemistry
  * @param {*} players
@@ -127,7 +117,7 @@ const getBestElevenForFormation = (players, formation) => {
 };
 
 const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
-  const improvedTeam = team;
+  const improvedTeam = {...team};
   const pivotPlayer = team[pivotPos];
   const pivotNeighborPlayers = [
     ...filterPlayersByNation(pivotPlayer.nation),
@@ -144,21 +134,23 @@ const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
     for (const potentialPlayer of potentialPlayersforPos) {
       if (
         calculateChemistryBetween(pivotPlayer, potentialPlayer) >
-        calculateChemistryBetween(pivotPlayer, improvedTeam[neighborPos])
+        calculateChemistryBetween(pivotPlayer, neighborPlayer)
       ) {
-        console.log(`For position '${neighborPos}' - replacing '${neighborPlayer.name}' (${
-          getFromMap(mapOfNations, neighborPlayer.nation).name
-        }/${getFromMap(mapOfClubs, neighborPlayer.club).name}/${getFromMap(mapOfLeagues, neighborPlayer.league).name})
-          with '${potentialPlayer.name}' (${getFromMap(mapOfNations, potentialPlayer.nation).name}/${
-          getFromMap(mapOfClubs, potentialPlayer.club).name
-        }/${getFromMap(mapOfLeagues, potentialPlayer.league).name}).`);
-
         improvedTeam[neighborPos] = potentialPlayer;
         break;
       }
     }
   }
-  return improvedTeam;
+  const prevScore = calculateTeamChemistry(team, neighborsMap);
+  const newScore = calculateTeamChemistry(improvedTeam, neighborsMap);
+  if (newScore <= prevScore) {
+    console.log(`The new chemistry score (${newScore}) <= previous score (${prevScore}). Reverting to previous squad.`);
+    return team;
+  } else {
+    console.log(`Improved chemistry score from (${prevScore}) to (${newScore}). Returning improved squad!`);
+    return improvedTeam;
+  }
+  
 };
 
 const calculateTeamChemistry = (team, neighborsMap) => {
@@ -178,13 +170,16 @@ const calculateTeamChemistry = (team, neighborsMap) => {
 
 const calculateChemistryBetween = (player1, player2) => {
   let chemistryBetween = 0;
-  if (player1.nation === player2.nation) {
+  if (player1 == undefined || player2 == undefined) {
+    return chemistryBetween;
+  }
+  if (player1 && player2 && player1.nation === player2.nation) {
     chemistryBetween++;
   }
-  if (player1.league === player2.league) {
+  if (player1.hasOwnProperty("league") && player2.hasOwnProperty("league") && player1.league === player2.league) {
     chemistryBetween++;
   }
-  if (player1.club === player2.club) {
+  if (player1.hasOwnProperty("club") && player2.hasOwnProperty("club") && player1.club === player2.club) {
     chemistryBetween = 2;
   }
   return chemistryBetween;
@@ -315,14 +310,21 @@ Please choose one of the following options:
  1. Generate squad randomly
  2. Generate Squad from one league
  3. Quit Application\n`;
+
 const formationMessage = `Please choose a formation - '442' or '433': `;
 const chemistryPrefMessage = `Please choose a pivot position from the list above: `;
+const uniqueLeaguesNames = [...new Set(players.map((p) => getFromMap(mapOfLeagues, p.league).name))];
+
 
 const getStarted = () => {
   console.log(`----------------------------------------`);
   console.log(startingMessage);
   const userPath = prompt(`Type your choice ('1' / '2' / '3'), then press enter: `);
-  if (userPath == "1" || userPath == "2") {
+  if (userPath == "1") {
+    getUserFormation();
+  } else if (userPath == "2") {
+    randomMode = false;
+    getLeague();
     getUserFormation();
   } else if (userPath == "3") {
     console.log(`\nClosing Application ...`);
@@ -333,13 +335,33 @@ const getStarted = () => {
   }
 };
 
+const getLeague = () => {
+  console.log(`----------------------------------------`);
+  console.log(`Please choose one of the following leagues:\n`);
+  uniqueLeaguesNames.map((elt, idx) => console.log(`${idx}. ${elt}`));
+  const leagueId = parseInt(prompt(`\nType your league choice number, then press enter: `));
+  console.log(`----------------------------------------`);
+  if (leagueId >= 0 && leagueId <= uniqueLeaguesNames.length) {
+    currentLeagueName = uniqueLeaguesNames[leagueId];
+  } else {
+    console.log(`\nInvalid league input: '${leagueId}'. Please enter a number between 0 and ${uniqueLeaguesNames.length}.\n`);
+    getLeague();
+  }
+};
+
 const getUserFormation = () => {
   const userFormation = prompt(`${formationMessage}`);
   console.log(`----------------------------------------`);
   if (userFormation == "442" || userFormation == "433") {
     currentFormation = userFormation;
     currentNeighborsMap = userFormation == "442" ? neighbors442 : neighbors433;
-    currentSquad = getBestElevenForFormation(shuffleArray(players), userFormation);
+    if (randomMode) {
+      console.log(`Generating Squad with players selected randomly.`);
+      currentSquad = getBestElevenForFormation(shuffleArray(players), userFormation);
+    } else {
+      console.log(`Generating Squad with players who play in the '${currentLeagueName}'.`);
+      currentSquad = getBestElevenForFormation(filterPlayersByLeagueName(currentLeagueName), userFormation);
+    }
     printSquadObject(currentSquad, currentFormation);
     getUserChemistryPreferences();
   } else {
@@ -361,7 +383,7 @@ List of positions for formation - ${currentFormation}: ${Object.keys(currentNeig
   if (Object.keys(currentNeighborsMap).includes(userChemistryPosition)) {
     const pivotPlayer = currentSquad[userChemistryPosition];
     console.log(
-      `Improving chemistry by building squad around:
+      `Improving chemistry by adding compatible players around:
         '${pivotPlayer.name}' (${userChemistryPosition}) from '${
         getFromMap(mapOfNations, pivotPlayer.nation).name
       }' who plays for '${getFromMap(mapOfClubs, pivotPlayer.club).name}' in the '${
@@ -376,5 +398,5 @@ List of positions for formation - ${currentFormation}: ${Object.keys(currentNeig
   }
 };
 
-// ONE LINE TO START THE APP AND START INTERACTING WITH THE USER
-getStarted();
+
+getStarted(); // ONE LINE TO START APPLICATION
