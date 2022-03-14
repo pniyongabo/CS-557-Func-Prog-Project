@@ -6,18 +6,25 @@ A simple soccer (FIFA) squad-builder that uses players attributes to maximize to
 1. run `npm install` to install dependencies (only the 'prompt-sync' module is required for command line interactions).
 2. run  `npm start` or `node server.js` to start the application.  
 ### Features
-The end goal of this application is to generate squad with the highest chemistry score (max 100) from a list of players.
-In this project, I am using the top 100 players from the FUTDB API as the starting data set.
-And then based on that list of players, and other datasets (maps of formations and positions, list of nations & clubs & leagues), the user goes through the following steps:
-1. To start off, the user can choose whether to 'generate a squad randomly' or to 'generate a squad from one league'. 
-2. Once a starting squad has been generated, the user can start improving the overall chemistry squad by choosing one player, and building around them.
+With this interactive command-line application, users can create squads from a list of players (`./data/players.json`). 
+
+Users can also continuously improve an existing squad's chemistry score (max 100) by choosing a 'pivot' position. Once a 'pivot' position is selected, the application will attempt to improve the chemistry score by replacing adjacent players with new players who are more compatible with the player in the pivot position.
+
+
+After running `npm start`, the user goes through the following steps:
+1. To start off, the user chooses whether to 'generate a squad randomly' or to 'generate a squad from one league'. 
+2. The users picks a formation. Currently only two formation are supported: '442' and '433'. After this step, a squad will be generated and a chemistry score will be generated.
+3. Once a squad has been generated, the user can start improving the overall chemistry squad by choosing a 'pivot' position, and building around that position.
+4. After an attempt of improving the chemistry score, the user can either choose (1) to 'Go back to the Main Menu', (2) 'Keep Improving the Current Squad', or (3) to 'Quit the Application'`;
 
 ### Functional Programming
 When coding this project, I used several functional programming concepts that are supported in Javascript:
-1. First-class functions: All functions in the main file (`server.js`) are declared as constant variables. And as Javascript support 'first-class functions', I am able to use those functions just like I would use other JS varibles. For example, I am able to pass them as arguments to other functions.  
-2. Immutable constants: Except for long-lived variable that are used to keep track of the state of teh application (e.g.: ), all variables in `server.js` are constant (using the `const` keyword). Using 'immutable constants' simplified the logic as I did not have to think of unintended side effects. Each of the function takes in some input, and return a newly-created output.
-3. Higher-order funtions: As players’ attributes are immutables, I am reading-in the JSON datasets as Javascript objects, and then using built-in array prototype higher-order funtions such as `map`, `filter`, and `reduce` to do operations such as iterating through objects & arrays, or filtering players from a certain nation & club & league. 
-4. Pure functions: Except for instances where I am interacting with the user, and I need to do IO operations, I have written my functions to be pure, i.e.: no side effects. When taking in arguments, I am reading-in some constants, doing some operations, and returning new objects without making any changes to the passed-in args.
+1. First-class functions: All functions in the main file (`server.js`) are declared as constant variables. As Javascript supports 'first-class functions', I was able to use those functions just as I would use other Javascript variables. For example, I was able to pass them as arguments to other functions.  
+2. Immutable constants: Except for long-lived variables that are used to keep track of the state of the application (e.g.: currentSquad, currentFormation, etc), all other variables in `server.js` are constants (declared using the `const` keyword). Using 'immutable constants' simplified the logic as I did not have to think of unintended side effects. 
+3. Higher-order funtions: As players’ attributes (position, nationality, etc) are immutable, I am parsing the JSON datasets and storing them as Javascript objects. Then I am using built-in array prototype higher-order funtions such as `map` and `filter` to perfom operations such as iterating through objects & arrays, and filtering players from a certain nation & club & league. 
+4. Pure functions: Except for instances where I am interacting with the user or printing some inforfmation to the console (and I need to do some IO operations); I have written my functions to be pure, i.e.: no side effects. When taking in arguments, I consume those arguments as constants, perform some operations, and return new objects without making changes to the objects that were passed in.
 
-### Used APIs
-1. Fifa Ultimate Team Database API: https://futdb.app/
+### Used API
+In this project, I am using the top 400 players from the FUTDB API (https://futdb.app/) as the starting dataset.
+In addition to the list of players, I am also using other datasets for getting and mapping players' attibutes data (list of nations, list of clubs, list of leagues).
+

@@ -137,7 +137,7 @@ const getBestElevenForFormation = (players, formation) => {
     numberOfPlayerAdded++;
     if (player.position == "GK") {
       bestEleven["gk"] = player;
-    } else if (player.position == "LB") {
+    } else if (player.position == "LB" || player.position == "LWB") {
       bestEleven["lb"] = player;
     } else if (player.position == "CB") {
       if (bestEleven.lcb === undefined) {
@@ -145,9 +145,9 @@ const getBestElevenForFormation = (players, formation) => {
       } else if (bestEleven.rcb === undefined) {
         bestEleven["rcb"] = player;
       }
-    } else if (player.position == "RB") {
+    } else if (player.position == "RB" || player.position == "RWB") {
       bestEleven["rb"] = player;
-    } else if (player.position == "LM") {
+    } else if (player.position == "LM" || player.position == "LW") {
       bestEleven["lm"] = player;
     } else if (player.position == "CM" || player.position == "CAM" || player.position == "CDM") {
       if (bestEleven.lcm === undefined) {
@@ -155,7 +155,7 @@ const getBestElevenForFormation = (players, formation) => {
       } else if (bestEleven.rcm === undefined) {
         bestEleven["rcm"] = player;
       }
-    } else if (player.position == "RM") {
+    } else if (player.position == "RM" || player.position == "RW") {
       bestEleven["rm"] = player;
     } else if (player.position == "ST" || player.position == "CF") {
       if (bestEleven.lst === undefined) {
@@ -186,7 +186,7 @@ const getBestEleven433 = (players) => {
     numberOfPlayerAdded++;
     if (player.position == "GK") {
       bestEleven["gk"] = player;
-    } else if (player.position == "LB") {
+    } else if (player.position == "LB" || player.position == "LWB") {
       bestEleven["lb"] = player;
     } else if (player.position == "CB") {
       if (bestEleven.lcb === undefined) {
@@ -194,7 +194,7 @@ const getBestEleven433 = (players) => {
       } else if (bestEleven.rcb === undefined) {
         bestEleven["rcb"] = player;
       }
-    } else if (player.position == "RB") {
+    } else if (player.position == "RB" || player.position == "RWB") {
       bestEleven["rb"] = player;
     } else if (player.position == "CM" || player.position == "CAM" || player.position == "CDM") {
       if (bestEleven.lcm === undefined) {
@@ -348,7 +348,7 @@ Please choose one of the following options:
 
 const closingMessage = `\nThat was fun! Would you like to:
  1. Go back to Main Menu
- 2. Kepp Improving Current Squad 
+ 2. Keep Improving Current Squad 
  3. Quit Application\n`;
 
 const formationMessage = `Please choose a formation - '442' or '433': `;
