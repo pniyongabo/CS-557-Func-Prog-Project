@@ -11,9 +11,9 @@ const mapOfNations = new Map(nations.map((obj) => [obj.id, obj]));
 const mapOfClubs = new Map(clubs.map((obj) => [obj.id, obj]));
 const mapOfLeagues = new Map(leagues.map((obj) => [obj.id, obj]));
 
-const uniqueNations = [...new Set(players.map(p => p.nation))];
-const uniqueClubs = [...new Set(players.map(p => p.club))];
-const uniqueLeagues = [...new Set(players.map(p => p.league))];
+const uniqueNations = [...new Set(players.map((p) => p.nation))];
+const uniqueClubs = [...new Set(players.map((p) => p.club))];
+const uniqueLeagues = [...new Set(players.map((p) => p.league))];
 
 let currentSquad = {};
 let currentFormation = "";
@@ -67,6 +67,13 @@ const printDetailsForOnePlayer = (player) => {
       .toString()
       .padEnd(6)} | ${player.position.padEnd(8)} |`
   );
+};
+
+const shuffleArray = (arr) => {
+  return arr
+    .map((element) => ({ element, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ element }) => element);
 };
 
 // Example usage of Filter Methods
@@ -298,9 +305,9 @@ const printSquadObject = (squad, formation) => {
  ********* USE 'PROMPT-SYNC' MODULE TO READ USER INPUT **********
  ****************************************************************
  */
- const prompt = require("prompt-sync")({ sigint: true });
+const prompt = require("prompt-sync")({ sigint: true });
 
- const startingMessage = `\nWelcome to the 'FIFA Squad Builder' interactive app!
+const startingMessage = `\nWelcome to the 'FIFA Squad Builder' interactive app!
 
 Current dataset stats: ${players.length} players, ${uniqueNations.length} nations, ${uniqueClubs.length} clubs, ${uniqueLeagues.length} leagues. 
 
@@ -308,8 +315,8 @@ Please choose one of the following options:
  1. Generate squad randomly
  2. Generate Squad from one league
  3. Quit Application\n`;
- const formationMessage = `Please choose a formation - '442' or '433': `;
- const chemistryPrefMessage = `Please choose a pivot position from the list above: `;
+const formationMessage = `Please choose a formation - '442' or '433': `;
+const chemistryPrefMessage = `Please choose a pivot position from the list above: `;
 
 const getStarted = () => {
   console.log(`----------------------------------------`);
@@ -332,7 +339,7 @@ const getUserFormation = () => {
   if (userFormation == "442" || userFormation == "433") {
     currentFormation = userFormation;
     currentNeighborsMap = userFormation == "442" ? neighbors442 : neighbors433;
-    currentSquad = getBestElevenForFormation(players, userFormation);
+    currentSquad = getBestElevenForFormation(shuffleArray(players), userFormation);
     printSquadObject(currentSquad, currentFormation);
     getUserChemistryPreferences();
   } else {
