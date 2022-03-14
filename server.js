@@ -1,6 +1,3 @@
-// const port = 3000;
-// const express = require('express');
-
 const players = require("./data/players.json");
 const nations = require("./data/nations.json");
 const clubs = require("./data/clubs.json");
@@ -10,24 +7,9 @@ const neighbors433 = require("./data/formations/433.json");
 const neighbors442 = require("./data/formations/442.json");
 const altPositionsMap = require("./data/formations/altPositionsMap.json");
 
-// const messi = require('./data/individuals/messi.json');
-// const dias = require('./data/individuals/dias.json');
-// const jorginho = require('./data/individuals/jorginho.json');
-// const donnarumma = require('./data/individuals/donnarumma.json');
-
 const mapOfNations = new Map(nations.map((obj) => [obj.id, obj]));
 const mapOfClubs = new Map(clubs.map((obj) => [obj.id, obj]));
 const mapOfLeagues = new Map(leagues.map((obj) => [obj.id, obj]));
-
-const prompt = require("prompt-sync")({ sigint: true });
-
-const startingMessage = `\nWelcome to the 'FIFA Squad Builder' interactive app!
-Please choose one of the following options:
-1. Generate squad randomly
-2. Generate Squad from one league
-3. Quit Application\n`;
-const formationMessage = `Please choose a formation - '442' or '433': `;
-const chemistryPrefMessage = `Please choose a pivot position from the list above (eg: 'cm'): `;
 
 let currentSquad = {};
 let currentFormation = "";
@@ -40,26 +22,6 @@ const getFromMap = (map, id) => {
     return { id: id, name: "-" };
   }
 };
-
-// const app = express();
-// app.use(express.static(__dirname + '/public'));
-// app.set('view engine', 'pug');
-
-// class SquadOfEleven {
-//   constructor() {
-//     this.gk = donnarumma;
-//     this.lb = dias;
-//     this.cb1 = dias;
-//     this.cb2 = dias;
-//     this.rb = dias;
-//     this.lm = jorginho;
-//     this.cm1 = jorginho;
-//     this.cm2 = jorginho;
-//     this.rm = jorginho;
-//     this.st1 = messi;
-//     this.st2 = messi;
-//   }
-// }
 
 const filterPlayersByNation = (id) => {
   return players.filter((player) => player.nation === id);
@@ -89,12 +51,6 @@ const filterPlayersByPosition = (playersList, pos) => {
   return playersList.filter((player) => player.position.toLowerCase() == pos);
 };
 
-// Example usage of Filter Methods
-// const playersFromNetherlands = filterPlayersByNation('Netherlands');
-// const playersFromPremierLeague = filterPlayersByLeague('Premier League');
-// const playersFromArsenal = filterPlayersByClub('Arsenal');
-
-// Print the results using Map
 const printDetailsForAListOfPlayers = (listOfPlayers) => {
   console.log(`| ${"PLAYER NAME".padEnd(25)} | ${"AGE".padEnd(3)} | ${"RATING".padEnd(6)} | ${"POSITION".padEnd(8)} |`);
   listOfPlayers.map((player) => printDetailsForOnePlayer(player));
@@ -108,6 +64,11 @@ const printDetailsForOnePlayer = (player) => {
       .padEnd(6)} | ${player.position.padEnd(8)} |`
   );
 };
+
+// Example usage of Filter Methods
+// const playersFromNetherlands = filterPlayersByNation('Netherlands');
+// const playersFromPremierLeague = filterPlayersByLeague('Premier League');
+// const playersFromArsenal = filterPlayersByClub('Arsenal');
 
 // console.log(`PRINTING ----- playersFromNetherlands`);
 // printDetailsForAListOfPlayers(playersFromNetherlands);
@@ -157,16 +118,12 @@ const getBestElevenForFormation = (players, formation) => {
 const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
   const improvedTeam = team;
   const pivotPlayer = team[pivotPos];
-
   const pivotNeighborPlayers = [
     ...filterPlayersByNation(pivotPlayer.nation),
     ...filterPlayersByLeague(pivotPlayer.league),
     ...filterPlayersByClub(pivotPlayer.club),
   ];
-
-  //console.log("pivotNeighborPlayers length: "+pivotNeighborPlayers.length);
   let pivotNeighborPlayersNoDup = (uniq = [...new Set(pivotNeighborPlayers)]);
-  //console.log("pivotNeighborPlayersNoDup length: "+ pivotNeighborPlayersNoDup.length);
 
   for (const neighborPos of neighborsMap[pivotPos]) {
     const formattedPosition = altPositionsMap.hasOwnProperty(neighborPos) ? altPositionsMap[neighborPos] : neighborPos;
@@ -198,17 +155,13 @@ const calculateTeamChemistry = (team, neighborsMap) => {
   for (const pos in team) {
     let playerChemistry = 0;
     let maxPlayerChemistry = 2 * neighborsMap[pos].length;
-    //let neighborPlayersNames = "";
     for (const neighborPos of neighborsMap[pos]) {
-      //neighborPlayersNames += `${team[neighborPos].name}, `;
       playerChemistry += calculateChemistryBetween(team[pos], team[neighborPos]);
     }
 
     let roundedChemisty = Math.floor((playerChemistry * 10) / maxPlayerChemistry);
-    //console.log(`player = ${team[player].name}, neighbors = ${neighborPlayersNames}, playerChemistry = ${playerChemistry}, roundedChemisty = ${roundedChemisty}, maxPlayerChemistry = ${maxPlayerChemistry} `);
     totalChemistry += roundedChemisty;
   }
-  //console.log("---------------------");
   return totalChemistry > 100 ? 100 : totalChemistry;
 };
 
@@ -336,55 +289,20 @@ const printSquadObject = (squad, formation) => {
   console.log(`----------------------------------------`);
 };
 
-/**
- * BEGIN - SERVING HTML FILE
- */
-
-// app.get('/', (req, res) => {
-//   console.log("page getting retrieved");
-//   res.render('index.html', {
-//     title: 'FIFA Squad Builder',
-//     players: players
-//   });
-// });
-
-/**
- * END - SERVING HTML FILE
- */
-
 /*
  ****************************************************************
+ ********* USE 'PROMPT-SYNC' MODULE TO READ USER INPUT **********
+ ****************************************************************
  */
+ const prompt = require("prompt-sync")({ sigint: true });
 
-/**
- * BEGIN - PUG CODE
- */
-
-// app.get('/', (req, res) => {
-//   res.render('players_gallery', {
-//     title: 'FIFA Squad Builder',
-//     players: players
-//   });
-// });
-
-// app.get('/player', (req, res) => {
-//   const player = players.find(p => p.id == req.query.id);
-//   player['clubName'] = mapOfClubs.get(player.club) ? mapOfClubs.get(player.club).name : " - ";
-//   player['leagueName'] = mapOfLeagues.get(player.league) ? mapOfLeagues.get(player.league).name : " - ";
-//   player['nationName'] = mapOfNations.get(player.nation) ? mapOfNations.get(player.nation).name : " - ";
-//   res.render('player_profile', {
-//     title: `About ${player.common_name}`,
-//     player,
-//   });
-// });
-
-/**
- * END - PUG CODE
- */
-
-// const server = app.listen(port, () => {
-//   console.log(`Express running → PORT ${server.address().port}`);
-// });
+ const startingMessage = `\nWelcome to the 'FIFA Squad Builder' interactive app!
+ Please choose one of the following options:
+ 1. Generate squad randomly
+ 2. Generate Squad from one league
+ 3. Quit Application\n`;
+ const formationMessage = `Please choose a formation - '442' or '433': `;
+ const chemistryPrefMessage = `Please choose a pivot position from the list above: `;
 
 const getStarted = () => {
   console.log(`----------------------------------------`);
