@@ -1,3 +1,9 @@
+/*
+ ****************************************************************
+ ******** LOAD HELPER FILES AND CREATE INITIALIZE STATE *********
+ ****************************************************************
+ */
+
 const players = require("./data/players.json");
 const nations = require("./data/nations.json");
 const clubs = require("./data/clubs.json");
@@ -21,13 +27,11 @@ let currentNeighborsMap = {};
 let randomMode = true;
 let currentLeagueName = "";
 
-const getFromMap = (map, id) => {
-  if (map.get(id)) {
-    return map.get(id);
-  } else {
-    return { id: id, name: "-" };
-  }
-};
+/*
+ ****************************************************************
+ ***** HELPER METHODS FOR FILTERING PLAYERS BY ATTRIBUTES  ******
+ ****************************************************************
+ */
 
 const filterPlayersByNation = (id) => {
   return players.filter((player) => player.nation === id);
@@ -57,6 +61,13 @@ const filterPlayersByPosition = (playersList, pos) => {
   return playersList.filter((player) => player.position.toLowerCase() == pos);
 };
 
+
+/*
+ ****************************************************************
+ ************** OTHER HELPER METHODS FOR PRINTING  **************
+ ****************************************************************
+ */
+
 const printDetailsForAListOfPlayers = (listOfPlayers) => {
   console.log(`| ${"PLAYER NAME".padEnd(25)} | ${"AGE".padEnd(3)} | ${"RATING".padEnd(6)} | ${"POSITION".padEnd(8)} |`);
   listOfPlayers.map((player) => printDetailsForOnePlayer(player));
@@ -71,6 +82,12 @@ const printDetailsForOnePlayer = (player) => {
   );
 };
 
+/*
+ ****************************************************************
+ ********* HELPER METHODS FOR INTERACTING WITH ARRAYS  **********
+ ****************************************************************
+ */
+
 const shuffleArray = (arr) => {
   return arr
     .map((element) => ({ element, sort: Math.random() }))
@@ -78,6 +95,26 @@ const shuffleArray = (arr) => {
     .map(({ element }) => element);
 };
 
+const getFromMap = (map, id) => {
+  if (map.get(id)) {
+    return map.get(id);
+  } else {
+    return { id: id, name: "-" };
+  }
+};
+
+/*
+ ****************************************************************
+ ***** METHODS FOR GENERATING SQUADS GIVEN A LIST OF PLAYERS ****
+ ****************************************************************
+ */
+
+/**
+ * 
+ * @param {*} players 
+ * @param {*} formation 
+ * @returns squad of up to eleven players depending on passed-in formation
+ */
 const getBestElevenForFormation = (players, formation) => {
   console.log(`Generating Squad for Formation: ${formation}`);
   let bestEleven = {};
@@ -89,78 +126,11 @@ const getBestElevenForFormation = (players, formation) => {
   return bestEleven;
 };
 
-const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
-  const improvedTeam = { ...team };
-  const pivotPlayer = team[pivotPos];
-  const pivotNeighborPlayers = [
-    ...filterPlayersByNation(pivotPlayer.nation),
-    ...filterPlayersByLeague(pivotPlayer.league),
-    ...filterPlayersByClub(pivotPlayer.club),
-  ];
-  let pivotNeighborPlayersNoDup = [...new Set(pivotNeighborPlayers)];
-
-  for (const neighborPos of neighborsMap[pivotPos]) {
-    const formattedPosition = altPositionsMap.hasOwnProperty(neighborPos) ? altPositionsMap[neighborPos] : neighborPos;
-    let potentialPlayersforPos = filterPlayersByPosition(pivotNeighborPlayersNoDup, formattedPosition);
-
-    const neighborPlayer = improvedTeam[neighborPos];
-    for (const potentialPlayer of potentialPlayersforPos) {
-      if (
-        calculateChemistryBetween(pivotPlayer, potentialPlayer) > calculateChemistryBetween(pivotPlayer, neighborPlayer)
-      ) {
-        improvedTeam[neighborPos] = potentialPlayer;
-        break;
-      }
-    }
-  }
-  const prevScore = calculateTeamChemistry(team, neighborsMap);
-  const newScore = calculateTeamChemistry(improvedTeam, neighborsMap);
-  if (newScore <= prevScore) {
-    console.log(`The new chemistry score (${newScore}) <= previous score (${prevScore}). Reverting to previous squad.`);
-    return team;
-  } else {
-    console.log(`Improved chemistry score from (${prevScore}) to (${newScore}). Returning improved squad!`);
-    return improvedTeam;
-  }
-};
-
-const calculateTeamChemistry = (team, neighborsMap) => {
-  let totalChemistry = 0;
-  for (const pos in team) {
-    let playerChemistry = 0;
-    let maxPlayerChemistry = 2 * neighborsMap[pos].length;
-    for (const neighborPos of neighborsMap[pos]) {
-      playerChemistry += calculateChemistryBetween(team[pos], team[neighborPos]);
-    }
-
-    let roundedChemisty = Math.floor((playerChemistry * 10) / maxPlayerChemistry);
-    totalChemistry += roundedChemisty;
-  }
-  return totalChemistry > 100 ? 100 : totalChemistry;
-};
-
-const calculateChemistryBetween = (player1, player2) => {
-  let chemistryBetween = 0;
-  if (player1 == undefined || player2 == undefined) {
-    return chemistryBetween;
-  }
-  if (player1 && player2 && player1.nation === player2.nation) {
-    chemistryBetween++;
-  }
-  if (player1.hasOwnProperty("league") && player2.hasOwnProperty("league") && player1.league === player2.league) {
-    chemistryBetween++;
-  }
-  if (player1.hasOwnProperty("club") && player2.hasOwnProperty("club") && player1.club === player2.club) {
-    chemistryBetween = 2;
-  }
-  return chemistryBetween;
-};
-
 /**
- * @param {*} players
- * @returns bestEleven442 squad
+ * @param {*} players - list of players to pick from
+ * @returns squad for the '442' formation
  */
-const getBestEleven442 = (players) => {
+ const getBestEleven442 = (players) => {
   const bestEleven = {};
   let numberOfPlayerAdded = 0;
   players.map((player) => {
@@ -205,9 +175,9 @@ const getBestEleven442 = (players) => {
 };
 
 /**
- *
- * @param {*} players
- * @returns bestEleven433 squad
+ * 
+ * @param {*} players - list of players to pick from
+ * @returns squad for the '442' formation
  */
 const getBestEleven433 = (players) => {
   const bestEleven = {};
@@ -268,9 +238,103 @@ const printSquadObject = (squad, formation) => {
 
 /*
  ****************************************************************
+ *** MAIN LOGIC FOR CALCULATING AND IMPROVING TEAM CHEMISTRY  ***
+ ****************************************************************
+ */
+
+ /**
+ * 
+ * @param {*} team - squad of up to eleven players
+ * @param {*} neighborsMap - map that list all formation positions and respective adjacent positions (e.g.: ./data/formations/433.json)
+ * @returns overall team chemistry score. max value is 110 in theory (10 per each player), capping at 100 similar to FIFA system 
+ */
+const calculateTeamChemistry = (team, neighborsMap) => {
+  let totalChemistry = 0;
+  for (const pos in team) {
+    let playerChemistry = 0;
+    let maxPlayerChemistry = 2 * neighborsMap[pos].length;
+    for (const neighborPos of neighborsMap[pos]) {
+      playerChemistry += calculateChemistryBetween(team[pos], team[neighborPos]);
+    }
+
+    let roundedChemisty = Math.floor((playerChemistry * 10) / maxPlayerChemistry);
+    totalChemistry += roundedChemisty;
+  }
+  return totalChemistry > 100 ? 100 : totalChemistry;
+};
+
+/**
+ * 
+ * @param {*} player1 
+ * @param {*} player2 
+ * @returns the chemistry value of an edge from one player to another
+ * 
+ */
+const calculateChemistryBetween = (player1, player2) => {
+  let chemistryBetween = 0;
+  if (player1 == undefined || player2 == undefined) {
+    return chemistryBetween;
+  }
+  if (player1.nation === player2.nation) {
+    chemistryBetween++;
+  }
+  if (player1.league === player2.league) {
+    chemistryBetween++;
+  }
+  if (player1.club === player2.club) {
+    chemistryBetween = 2;
+  }
+  return chemistryBetween;
+};
+
+/**
+ * 
+ * @param {*} team - current squad
+ * @param {*} pivotPos - pivot position on which to build around 
+ * @param {*} neighborsMap - map that list all formation positions and respective adjacent positions (e.g.: ./data/formations/433.json)
+ * @returns 
+ */
+const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
+  const improvedTeam = { ...team };
+  const pivotPlayer = team[pivotPos];
+  const pivotNeighborPlayers = [
+    ...filterPlayersByNation(pivotPlayer.nation),
+    ...filterPlayersByLeague(pivotPlayer.league),
+    ...filterPlayersByClub(pivotPlayer.club),
+  ];
+  let pivotNeighborPlayersNoDup = [...new Set(pivotNeighborPlayers)];
+
+  for (const neighborPos of neighborsMap[pivotPos]) {
+    const formattedPosition = altPositionsMap.hasOwnProperty(neighborPos) ? altPositionsMap[neighborPos] : neighborPos;
+    let potentialPlayersforPos = filterPlayersByPosition(pivotNeighborPlayersNoDup, formattedPosition);
+
+    const neighborPlayer = improvedTeam[neighborPos];
+    for (const potentialPlayer of potentialPlayersforPos) {
+      if (
+        calculateChemistryBetween(pivotPlayer, potentialPlayer) > calculateChemistryBetween(pivotPlayer, neighborPlayer)
+      ) {
+        improvedTeam[neighborPos] = potentialPlayer;
+        break;
+      }
+    }
+  }
+  const prevScore = calculateTeamChemistry(team, neighborsMap);
+  const newScore = calculateTeamChemistry(improvedTeam, neighborsMap);
+  if (newScore <= prevScore) {
+    console.log(`The new chemistry score (${newScore}) <= previous score (${prevScore}). Reverting to previous squad.`);
+    return team;
+  } else {
+    console.log(`Improved chemistry score from (${prevScore}) to (${newScore}). Returning improved squad!`);
+    return improvedTeam;
+  }
+};
+
+/*
+ ****************************************************************
  ********* USE 'PROMPT-SYNC' MODULE TO READ USER INPUT **********
  ****************************************************************
  */
+
 const prompt = require("prompt-sync")({ sigint: true });
 
 const startingMessage = `\nWelcome to the 'FIFA Squad Builder' interactive app!
