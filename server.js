@@ -21,9 +21,13 @@ const mapOfLeagues = new Map(leagues.map((obj) => [obj.id, obj]));
 
 const prompt = require("prompt-sync")({ sigint: true });
 
-const appTitle = "FIFA Squad Builder";
+const startingMessage = `\nWelcome to the 'FIFA Squad Builder' interactive app!
+Please choose one of the following options:
+1. Generate squad randomly
+2. Generate Squad from one league
+3. Quit Application\n`;
 const formationMessage = `Please choose a formation - '442' or '433': `;
-const chemistryPrefMessage = `Please choose a pivot position from the list above : `;
+const chemistryPrefMessage = `Please choose a pivot position from the list above (eg: 'cm'): `;
 
 let currentSquad = {};
 let currentFormation = "";
@@ -382,6 +386,21 @@ const printSquadObject = (squad, formation) => {
 //   console.log(`Express running → PORT ${server.address().port}`);
 // });
 
+const getStarted = () => {
+  console.log(`----------------------------------------`);
+  console.log(startingMessage);
+  const userPath = prompt(`Type your choice ('1' / '2' / '3'), then press enter: `);
+  if (userPath == "1" || userPath == "2") {
+    getUserFormation();
+  } else if (userPath == "3") {
+    console.log(`\nClosing Application ...`);
+    process.exit(0);
+  } else {
+    console.log(`\nInvalid input: '${userPath}'. Valid options are '1', '2', or '3'.`);
+    getStarted();
+  }
+};
+
 const getUserFormation = () => {
   const userFormation = prompt(`${formationMessage}`);
   console.log(`----------------------------------------`);
@@ -390,8 +409,9 @@ const getUserFormation = () => {
     currentNeighborsMap = userFormation == "442" ? neighbors442 : neighbors433;
     currentSquad = getBestElevenForFormation(players, userFormation);
     printSquadObject(currentSquad, currentFormation);
+    getUserChemistryPreferences();
   } else {
-    console.log(`Invalid formation input: ${userFormation}.`);
+    console.log(`\nInvalid formation input: '${userFormation}'.`);
     getUserFormation();
   }
 };
@@ -409,21 +429,19 @@ List of positions for formation - ${currentFormation}: ${Object.keys(currentNeig
   if (Object.keys(currentNeighborsMap).includes(userChemistryPosition)) {
     const pivotPlayer = currentSquad[userChemistryPosition];
     console.log(
-      `Improving chemistry by building squad around
+      `Improving chemistry by building squad around:
         '${pivotPlayer.name}' (${userChemistryPosition}) from '${
         getFromMap(mapOfNations, pivotPlayer.nation).name
       }' who plays for '${getFromMap(mapOfClubs, pivotPlayer.club).name}' in the '${
         getFromMap(mapOfLeagues, pivotPlayer.league).name
-      }'\n.`
+      }'.\n`
     );
     currentSquad = improveTeamChemistry(currentSquad, userChemistryPosition, currentNeighborsMap);
     printSquadObject(currentSquad, currentFormation);
   } else {
-    console.log(`Invalid position input: ${userChemistryPosition}.`);
+    console.log(`\nInvalid position input: '${userChemistryPosition}'.`);
     getUserChemistryPreferences();
   }
 };
 
-console.log(`Welcome to ${appTitle}!`);
-getUserFormation();
-getUserChemistryPreferences();
+getStarted();
