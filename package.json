@@ -1,7 +1,7 @@
 {
   "name": "fifa-squad-builder",
   "version": "1.0.0",
-  "description": "A simple soccer squad-builder that uses players attributes to maximize total team chemistry. This web-app was built using functional-style programming.",
+  "description": "A simple soccer (FIFA) squad-builder that uses players attributes to maximize total team chemistry. This interative command line application was built using functional-style programming when possible.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,8 @@
     "soccer",
     "es6",
     "functional-programming",
-    "course-project"
+    "course-project",
+    "prompt-sync"
   ],
   "author": "Patrick Niyongabo",
   "license": "MIT",
