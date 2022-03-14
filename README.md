@@ -1,6 +1,6 @@
 ## FIFA Squad Builder
 
-A simple soccer (FIFA) squad-builder that uses players attributes to maximize total team chemistry. This interative command line application was built using functional-style programming when possible.
+A simple soccer (FIFA) squad-builder that uses players attributes to maximize total team chemistry. This interative command-line application was built using functional programming features. 
 
 ### How to Run this Application
 1. run `npm install` to install dependencies (only the 'prompt-sync' module is required for command line interactions).
