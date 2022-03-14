@@ -11,6 +11,10 @@ const mapOfNations = new Map(nations.map((obj) => [obj.id, obj]));
 const mapOfClubs = new Map(clubs.map((obj) => [obj.id, obj]));
 const mapOfLeagues = new Map(leagues.map((obj) => [obj.id, obj]));
 
+const uniqueNations = [...new Set(players.map(p => p.nation))];
+const uniqueClubs = [...new Set(players.map(p => p.club))];
+const uniqueLeagues = [...new Set(players.map(p => p.league))];
+
 let currentSquad = {};
 let currentFormation = "";
 let currentNeighborsMap = {};
@@ -123,7 +127,7 @@ const improveTeamChemistry = (team, pivotPos, neighborsMap) => {
     ...filterPlayersByLeague(pivotPlayer.league),
     ...filterPlayersByClub(pivotPlayer.club),
   ];
-  let pivotNeighborPlayersNoDup = (uniq = [...new Set(pivotNeighborPlayers)]);
+  let pivotNeighborPlayersNoDup = [...new Set(pivotNeighborPlayers)];
 
   for (const neighborPos of neighborsMap[pivotPos]) {
     const formattedPosition = altPositionsMap.hasOwnProperty(neighborPos) ? altPositionsMap[neighborPos] : neighborPos;
@@ -297,7 +301,10 @@ const printSquadObject = (squad, formation) => {
  const prompt = require("prompt-sync")({ sigint: true });
 
  const startingMessage = `\nWelcome to the 'FIFA Squad Builder' interactive app!
- Please choose one of the following options:
+
+Current dataset stats: ${players.length} players, ${uniqueNations.length} nations, ${uniqueClubs.length} clubs, ${uniqueLeagues.length} leagues. 
+
+Please choose one of the following options:
  1. Generate squad randomly
  2. Generate Squad from one league
  3. Quit Application\n`;
@@ -362,4 +369,5 @@ List of positions for formation - ${currentFormation}: ${Object.keys(currentNeig
   }
 };
 
+// ONE LINE TO START THE APP AND START INTERACTING WITH THE USER
 getStarted();
